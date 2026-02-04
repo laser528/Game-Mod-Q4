@@ -2940,6 +2940,16 @@ void Cmd_BuyItem_f( const idCmdArgs& args ) {
 	player->GenerateImpulseForBuyAttempt( args.Argv(1) );
 }
 // RITUAL END
+void Cmd_WhereAmI_f(const idCmdArgs& args ) {
+	idVec3 origin = {};
+	idMat3 axis = {};
+	idPlayer* player = gameLocal.GetLocalPlayer();
+	if (!player) return;
+	player->GetPosition(origin, axis);
+	gameLocal.Printf("I amd AT %f, %f, %f\n", origin.x, origin.y, origin.z);
+}
+//Laser End
+
 
 void Cmd_PlayerEmote_f( const idCmdArgs& args ) {
 	if( gameLocal.GetLocalPlayer() == NULL ) {
@@ -3232,7 +3242,7 @@ void idGameLocal::InitConsoleCommands( void ) {
 	cmdSystem->AddCommand( "buyMenu",				Cmd_ToggleBuyMenu_f,		CMD_FL_GAME,				"Toggle buy menu (if in a buy zone and the game type supports it)" );
 	cmdSystem->AddCommand( "buy",					Cmd_BuyItem_f,				CMD_FL_GAME,				"Buy an item (if in a buy zone and the game type supports it)" );
 // RITUAL END
-
+	cmdSystem->AddCommand("whereAmI",Cmd_WhereAmI_f, CMD_FL_GAME, "Print to console");
 }
 
 /*
