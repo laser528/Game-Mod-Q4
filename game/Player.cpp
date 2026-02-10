@@ -8981,7 +8981,7 @@ void idPlayer::Move( void ) {
 		physicsObj.SetMovementType( PM_FREEZE );
 	} else {
 		physicsObj.SetContents( CONTENTS_BODY | (use_combat_bbox?CONTENTS_SOLID:0) );
-		physicsObj.SetMovementType( PM_NORMAL );
+		physicsObj.SetMovementType( PM_NORMAL );// PM_NORMAL go here
 	}
 
 	if ( spectating || ( gameLocal.isClient && gameLocal.GetLocalPlayer() && gameLocal.GetLocalPlayer()->GetInstance() != instance ) ) {
@@ -9023,7 +9023,7 @@ void idPlayer::Move( void ) {
 	} else if ( IsInVehicle ( ) ) {
 		newEyeOffset = 0.0f;
 	} else {
-		newEyeOffset = pm_normalviewheight.GetFloat();
+		newEyeOffset = pm_normalviewheight.GetFloat() * 10; // HUGE 
 	}
 
 	if ( EyeHeight() != newEyeOffset ) {
