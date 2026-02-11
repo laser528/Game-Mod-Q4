@@ -4332,7 +4332,7 @@ void idGameLocal::RunDebugInfo( void ) {
 		// use g_maxShowDistance value instead of 128.0f
 		collisionModelManager->DrawModel( clip[0]->GetWorldCollisionModel(), vec3_origin, mat3_identity, origin, mat3_identity, g_maxShowDistance.GetFloat() );
 	}
-
+	
 	if ( g_showCollisionModels.GetBool() ) {
 		if( g_showCollisionModels.GetInteger() == 2 ) {
 			clip[ 0 ]->DrawClipModels( player->GetEyePosition(), g_maxShowDistance.GetFloat(), pm_thirdPerson.GetBool() ? NULL : player, &idPlayer::GetClassType() );

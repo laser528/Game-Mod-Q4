@@ -9023,7 +9023,7 @@ void idPlayer::Move( void ) {
 	} else if ( IsInVehicle ( ) ) {
 		newEyeOffset = 0.0f;
 	} else {
-		newEyeOffset = pm_normalviewheight.GetFloat() * 10; // HUGE 
+		newEyeOffset = pm_normalviewheight.GetFloat(); // Laser HUGE camera offset
 	}
 
 	if ( EyeHeight() != newEyeOffset ) {
@@ -10777,7 +10777,7 @@ void idPlayer::OffsetThirdPersonView( float angle, float range, float height, bo
 	idAngles		angles;
 	idMat3			axis;
 	idBounds		bounds;
-
+	
 	angles = viewAngles;
 	GetViewPos( origin, axis );
 
@@ -11040,13 +11040,13 @@ void idPlayer::CalculateRenderView( void ) {
 		bool cameraIsSet = false;
 
 		// First try out any camera views that can possibly fail.
-		if( !cameraIsSet ){
+		if( !cameraIsSet ){ // Laser BIGGGG
 			if ( g_stopTime.GetBool() ) {
 	 			renderView->vieworg = firstPersonViewOrigin;
 	 			renderView->viewaxis = firstPersonViewAxis;
 				SmoothenRenderView( true );
  
-	 			if ( !pm_thirdPerson.GetBool() ) {
+	 			if ( !pm_thirdPerson.GetBool() ) { // Laser !pm_thirdPerson.GetBool()
 	 				// set the viewID to the clientNum + 1, so we can suppress the right player bodies and
 	 				// allow the right player view weapons
 	 				renderView->viewID = entityNumber + 1;
@@ -11058,7 +11058,7 @@ void idPlayer::CalculateRenderView( void ) {
 // RAVEN END
 				SmoothenRenderView( false );
 			} else if ( pm_thirdPerson.GetBool() ) {
-				OffsetThirdPersonView( pm_thirdPersonAngle.GetFloat(), pm_thirdPersonRange.GetFloat(), pm_thirdPersonHeight.GetFloat(), pm_thirdPersonClip.GetBool() );
+				OffsetThirdPersonView( 0.0f, 80.0f, 0.0f, pm_thirdPersonClip.GetBool() ); // Laser pm_thirdPersonAngle.GetFloat(), pm_thirdPersonRange.GetFloat(), pm_thirdPersonHeight.GetFloat(), pm_thirdPersonClip.GetBool()
 				SmoothenRenderView( false );
 			} else if ( pm_thirdPersonDeath.GetBool() ) {
 				range = gameLocal.time < minRespawnTime ? ( gameLocal.time + RAGDOLL_DEATH_TIME - minRespawnTime ) * ( 120.0f / RAGDOLL_DEATH_TIME ) : 120.0f;

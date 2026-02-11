@@ -402,7 +402,6 @@ stateResult_t rvWeaponBlaster::State_Fire ( const stateParms_t& parms ) {
 		FIRE_INIT,
 		FIRE_WAIT,
 	};
-	gameLocal.Printf("got here\n");
 	switch ( parms.stage ) {
 		case FIRE_INIT:	
 

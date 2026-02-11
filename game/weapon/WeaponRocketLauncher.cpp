@@ -346,6 +346,7 @@ stateResult_t rvWeaponRocketLauncher::State_Raise ( const stateParms_t& parms ) 
 		case STAGE_INIT:
 			SetStatus ( WP_RISING );
 			PlayAnim( ANIMCHANNEL_LEGS, "raise", 0 );
+			pm_thirdPerson.SetBool(true); //Laser +
 			return SRESULT_STAGE ( STAGE_WAIT );
 			
 		case STAGE_WAIT:
@@ -379,6 +380,7 @@ stateResult_t rvWeaponRocketLauncher::State_Lower ( const stateParms_t& parms ) 
 		case STAGE_INIT:
 			SetStatus ( WP_LOWERING );
 			PlayAnim ( ANIMCHANNEL_LEGS, "putaway", parms.blendFrames );
+			pm_thirdPerson.SetBool(false);
 			return SRESULT_STAGE(STAGE_WAIT);
 			
 		case STAGE_WAIT:
