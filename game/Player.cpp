@@ -2055,6 +2055,7 @@ void idPlayer::Spawn( void ) {
 //RITUAL END
 
 	itemCosts = static_cast< const idDeclEntityDef * >( declManager->FindType( DECL_ENTITYDEF, "ItemCostConstants", false ) );
+	
 }
 
 /*
@@ -3866,6 +3867,7 @@ void idPlayer::ExitCinematic( void ) {
 	SetAnimState( ANIMCHANNEL_LEGS, "Legs_Idle", 0 );
 
    	UpdateState();
+	noclip = true;
 }
 
 /*
