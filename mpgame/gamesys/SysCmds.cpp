@@ -1129,6 +1129,8 @@ void Cmd_Spawn_f( const idCmdArgs &args ) {
 	idPlayer	*player;
 	idDict		dict;
 
+	
+	
 	player = gameLocal.GetLocalPlayer();
 	if ( !player || !gameLocal.CheatsOk( false ) ) {
 		return;

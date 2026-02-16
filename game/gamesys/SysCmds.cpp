@@ -1110,7 +1110,7 @@ void Cmd_Trigger_f( const idCmdArgs &args ) {
 Cmd_Spawn_f
 ===================
 */
-void Cmd_Spawn_f( const idCmdArgs &args ) {
+void Cmd_Spawn_f( const idCmdArgs &args ) { // Laser
 #ifndef _MPBETA
 	const char *key, *value;
 	int			i;

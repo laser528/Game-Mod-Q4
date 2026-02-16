@@ -62,6 +62,10 @@ rvAITactical::Spawn
 ================
 */
 void rvAITactical::Spawn ( void ) {
+	gameLocal.Printf("WE MADE IT\n"); // LASER
+	if (!gameLocal.GetTurn()) {
+		gameLocal.Printf("Player Turn\n");
+	}
 	InitSpawnArgsVariables();
 
 	// Force a posture?

@@ -8419,6 +8419,21 @@ bool idGameLocal::IsTeamPowerups( void ) {
 	return ( gameType != GAME_ARENA_CTF );
 }
 
+// LASER LASER LASER 
+/*
+=============
+LaserGameLocal::Getturn
+=============
+*/
+bool turn = false;
+bool idGameLocal::GetTurn() { 
+	return turn;
+}
+
+void idGameLocal::SetTurn(bool change) {
+	turn = change;
+}
+
 // RAVEN BEGIN
 // mwhitlock: Dynamic memory consolidation
 #if defined(_RV_MEM_SYS_SUPPORT)
@@ -8503,6 +8518,11 @@ void *operator new[]( size_t s ) {
 void operator delete[]( void *p ) {
 	Mem_Free( p );
 }
+
+
+
+
+
 #endif	// #else #ifdef ID_DEBUG_MEMORY
 #endif	// #if defined(ID_REDIRECT_NEWDELETE) || defined(_RV_MEM_SYS_SUPPORT)
 // RAVEN END

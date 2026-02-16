@@ -1101,6 +1101,10 @@ public:
 
 	int						GetCurrentDemoProtocol( void ) { return demo_protocol; }
 
+// LASER 
+	bool                    GetTurn(void);
+	void                    SetTurn(bool change);
+
 private:
 	char					clientGuids[ MAX_CLIENTS ][ CLIENT_GUID_LENGTH ];
 	idList<mpBanInfo_t>		banList;
