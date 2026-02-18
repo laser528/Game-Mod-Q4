@@ -189,6 +189,9 @@ rvMonsterStroggFlyer::CheckActions
 ================
 */
 bool rvMonsterStroggFlyer::CheckActions ( void ) {
+	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+		return true;
+	}
 	if ( PerformAction ( &actionBombAttack, (checkAction_t)&idAI::CheckAction_RangedAttack, &actionTimerRangedAttack )    ||
 	     PerformAction ( &actionBlasterAttack, (checkAction_t)&idAI::CheckAction_RangedAttack, &actionTimerRangedAttack )    ) {
 		return true;

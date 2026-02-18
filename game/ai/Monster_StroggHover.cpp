@@ -862,6 +862,9 @@ rvMonsterStroggHover::Spawn
 ================
 */
 bool rvMonsterStroggHover::CheckActions ( void ) {
+	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+		return true;
+	}
 	if ( PerformAction ( &actionCircleStrafe,  (checkAction_t)&rvMonsterStroggHover::CheckAction_CircleStrafe ) ) {
 		return true;
 	}

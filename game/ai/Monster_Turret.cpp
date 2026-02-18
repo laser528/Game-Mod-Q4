@@ -100,6 +100,9 @@ rvMonsterTurret::CheckActions
 ================
 */
 bool rvMonsterTurret::CheckActions ( void ) {
+	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+		return true;
+	}
 	// Attacks
 	if ( PerformAction ( &actionBlasterAttack, (checkAction_t)&idAI::CheckAction_RangedAttack, &actionTimerRangedAttack ) ) {
 		return true;

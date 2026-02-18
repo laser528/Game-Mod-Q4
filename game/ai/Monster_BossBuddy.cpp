@@ -444,6 +444,10 @@ bool rvMonsterBossBuddy::Pain( idEntity *inflictor, idEntity *attacker, int dama
 //------------------------------------------------------------
 bool rvMonsterBossBuddy::CheckActions( void ) 
 {
+	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+		return true;
+	}
+
 	// If not moving, try turning in place
 /*	if ( !move.fl.moving && gameLocal.time > combat.investigateTime ) 
 	{

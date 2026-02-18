@@ -62,10 +62,10 @@ rvAITactical::Spawn
 ================
 */
 void rvAITactical::Spawn ( void ) {
-	gameLocal.Printf("WE MADE IT\n"); // LASER
-	if (!gameLocal.GetTurn()) {
-		gameLocal.Printf("Player Turn\n");
-	}
+	//gameLocal.Printf("WE MADE IT\n"); // LASER
+	//if (!gameLocal.GetTurn()) {
+	//	gameLocal.Printf("Player Turn\n");
+	//}
 	InitSpawnArgsVariables();
 
 	// Force a posture?
@@ -559,6 +559,7 @@ rvAITactical::OnStopMoving
 ================
 */
 void rvAITactical::OnStopMoving	( aiMoveCommand_t oldMoveCommand ) {
+	// LASER IMPORTANT
 	// Ensure the peek doesnt happen immedately every time we stop at a cover
 	if ( IsBehindCover ( ) ){
 		actionTimerPeek.Clear ( actionTime );

@@ -266,6 +266,10 @@ rvMonsterHeavyHoverTank::Spawn
 ================
 */
 bool rvMonsterHeavyHoverTank::CheckActions ( void ) {
+	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+		return true;
+	}
+
 	if ( weaponStateIdeal != weaponStateCurrent ) {
 		PerformAction ( "Torso_ChangeWeaponState", 4 );
 		return true;

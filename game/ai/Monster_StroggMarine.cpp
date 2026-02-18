@@ -390,6 +390,9 @@ rvMonsterStroggMarine::CheckActions
 ================
 */
 bool rvMonsterStroggMarine::CheckActions ( void ) {
+	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+		return true;
+	}
 
 	if ( idAI::CheckActions ( ) ) 
 	{

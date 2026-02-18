@@ -191,6 +191,10 @@ rvMonsterIronMaiden::CheckActions
 ================
 */
 bool rvMonsterIronMaiden::CheckActions ( void ) {
+	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+		return true;
+	}
+
 	// When phased the only available action is phase in
 	if ( phaseTime ) {
 		if ( PerformAction_PhaseIn ( ) ) {

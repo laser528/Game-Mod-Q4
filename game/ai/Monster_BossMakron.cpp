@@ -583,6 +583,9 @@ rvMonsterBossMakron::CheckActions
 ================
 */
 bool rvMonsterBossMakron::CheckActions ( void ) {
+	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+		return true;
+	}
 
 	if( spawnArgs.GetFloat("furniture", "0"))	{
 		return true;

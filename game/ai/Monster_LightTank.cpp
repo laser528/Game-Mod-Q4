@@ -402,6 +402,10 @@ rvMonsterLightTank::CheckActions
 ================
 */
 bool rvMonsterLightTank::CheckActions ( void ) {
+	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+		return true;
+	}
+
 	if ( PerformAction ( &actionFlameThrower, (checkAction_t)&idAI::CheckAction_RangedAttack ) ) {
 		return true;
 	}

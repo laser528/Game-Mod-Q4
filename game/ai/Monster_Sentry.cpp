@@ -201,6 +201,10 @@ rvMonsterSentry::CheckActions
 ================
 */
 bool rvMonsterSentry::CheckActions ( void ) {
+	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+		return true;
+	}
+
 	if ( kamakaziHealth != 0 ) {
 		if ( PerformAction ( &actionBlasterAttack, (checkAction_t)&idAI::CheckAction_RangedAttack, &actionTimerRangedAttack ) ) {
 			return true;

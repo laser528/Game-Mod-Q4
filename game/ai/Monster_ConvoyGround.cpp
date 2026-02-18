@@ -257,6 +257,10 @@ rvMonsterConvoyGround::Spawn
 ================
 */
 bool rvMonsterConvoyGround::CheckActions ( void ) {
+	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+		return true;
+	}
+
 	if ( isOpen ) {
 		if ( move.fl.moving ) {
 /*		

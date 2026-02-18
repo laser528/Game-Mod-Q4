@@ -783,7 +783,7 @@ idAI::FaceEnemy
 Continually face the enemy's last known position.  MoveDone is always true in this case.
 =====================
 */
-bool idAI::FaceEnemy( void ) {
+bool idAI::FaceEnemy( void ) { 
  	idEntity *enemyEnt = enemy.ent;
 	if ( !enemyEnt ) {
 		StopMove( MOVE_STATUS_DEST_NOT_FOUND );
@@ -813,7 +813,7 @@ idAI::FaceEntity
 Continually face the entity position.  MoveDone will never be true in this case.
 =====================
 */
-bool idAI::FaceEntity( idEntity *ent ) {
+bool idAI::FaceEntity( idEntity *ent ) { // LASER HUGE FACE ENTITY
 	if ( !ent ) {
 		StopMove( MOVE_STATUS_DEST_NOT_FOUND );
 		return false;
@@ -843,8 +843,11 @@ idAI::StartMove
 Initialize a new movement by setting up the movement structure
 =====================
 */
-bool idAI::StartMove ( aiMoveCommand_t command, const idVec3& goalOrigin, int goalArea, idEntity* goalEntity, aasFeature_t* feature, float range ) {
+bool idAI::StartMove ( aiMoveCommand_t command, const idVec3& goalOrigin, int goalArea, idEntity* goalEntity, aasFeature_t* feature, float range ) { // LASER HUGE STARTMOVE
 	// If we are already there then we are done
+	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+		return true;
+	}
 	if ( ReachedPos( goalOrigin, command ) ) {
 		StopMove( MOVE_STATUS_DONE );
 		return true;
@@ -923,6 +926,10 @@ idAI::MoveToTether
 bool idAI::MoveToTether ( rvAITether* tether ) {
 	aasGoal_t	goal;
 
+	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+		return true;
+	}
+
 	// find a goal using the currently active tether
 	if ( !aas || !tether ) {
 		return false;
@@ -952,6 +959,11 @@ bool idAI::MoveToAttack ( idEntity *ent, int attack_anim ) {
 	aasGoal_t		goal;
 	idBounds		bounds; 
 	idVec3			pos;
+
+
+	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+		return true;
+	}
 
 	if ( !aas || !ent ) {
 		return false;
@@ -1022,6 +1034,11 @@ bool idAI::MoveToEnemy( void ) {
 	aasPath_t	path;
 	idVec3		pos;
 
+
+	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+		return true;
+	}
+
 	if ( !enemy.ent ) {
 		return false;
 	}
@@ -1090,6 +1107,12 @@ bool idAI::MoveToEntity( idEntity *ent, float range ) {
 	aasPath_t	path;
 	idVec3		pos;
 
+
+	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+		return true;
+	}
+
+
 	if ( !ent ) {
 		return false;
 	}
@@ -1149,6 +1172,11 @@ bool idAI::MoveOutOfRange( idEntity *ent, float range, float minRange ) {
 	idVec3			pos;
 	int				obstacles;
 
+
+	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+		return true;
+	}
+
 	if ( !aas || !ent ) {
 		return false;
 	}
@@ -1179,10 +1207,14 @@ bool idAI::MoveOutOfRange( idEntity *ent, float range, float minRange ) {
 idAI::MoveTo
 =====================
 */
-bool idAI::MoveTo ( const idVec3 &pos, float range ) {
+bool idAI::MoveTo ( const idVec3 &pos, float range ) { // LASER IMPORTANT
 	idVec3		org;
 	int			areaNum;
 	aasPath_t	path;
+
+	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+		return true;
+	}
 
 	if ( !aas ) {
 		return false;
@@ -1215,6 +1247,10 @@ bool idAI::MoveToCover( float minRange, float maxRange, aiTactical_t coverType )
 	aasPath_t			path;
 	aasFeature_t*		feature = 0;
 	idVec3				featureOrigin;
+
+	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+		return true;
+	}
 
 	if ( !aas ) {
 		return false;
@@ -1273,6 +1309,10 @@ bool idAI::MoveToHide ( void ) {
 	idBounds		bounds;
 	idVec3			pos;
 
+	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+		return true;
+	}
+
 	// Need an enemy to hide from
 	if ( !aas || !enemy.ent ) {
 		return false;
@@ -1298,6 +1338,11 @@ idAI::SlideToPosition
 =====================
 */
 bool idAI::SlideToPosition( const idVec3 &pos, float time ) {
+
+	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+		return true;
+	}
+
 	StopMove( MOVE_STATUS_DONE );
 
 	move.moveDest		= pos;
@@ -1333,6 +1378,10 @@ idAI::WanderAround
 bool idAI::WanderAround( void ) {
 	idVec3 dest;
 	
+	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+		return true;
+	}
+
 	StopMove( MOVE_STATUS_DONE );
 	
 	dest = physicsObj.GetOrigin() + viewAxis[ 0 ] * physicsObj.GetGravityAxis() * 256.0f;
@@ -1353,6 +1402,10 @@ idAI::StepDirection
 bool idAI::StepDirection( float dir ) {
 	predictedPath_t path;
 	idVec3 org;
+
+	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+		return true;
+	}
 
 	move.wanderYaw = dir;
 	move.moveDir = idAngles( 0, move.wanderYaw, 0 ).ToForward();
@@ -1416,6 +1469,10 @@ bool idAI::NewWanderDir( const idVec3 &dest ) {
 	float	deltax, deltay;
 	float	d[ 3 ];
 	float	tdir, olddir, turnaround;
+
+	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+		return true;
+	}
 
 	move.nextWanderTime = gameLocal.time + ( gameLocal.random.RandomFloat() * 500 + 500 );
 
@@ -1503,11 +1560,16 @@ bool idAI::NewWanderDir( const idVec3 &dest ) {
 idAI::GetMovePos
 =====================
 */
-bool idAI::GetMovePos( idVec3 &seekPos, idReachability** seekReach ) {
+bool idAI::GetMovePos( idVec3 &seekPos, idReachability** seekReach ) { // Laser IMPORTANT
 	int			areaNum;
 	aasPath_t	path;
 	bool		result;
 	idVec3		org;
+
+
+	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+		return true;
+	}
 
 	org = physicsObj.GetOrigin();
 	seekPos = org;
@@ -1679,6 +1741,11 @@ idAI::TurnToward
 =====================
 */
 bool idAI::TurnToward( float yaw ) {
+
+	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+		return true;
+	}
+
 	move.ideal_yaw = idMath::AngleNormalize180( yaw );
 	bool result = FacingIdeal();
 	return result;
@@ -1693,6 +1760,10 @@ bool idAI::TurnToward( const idVec3 &pos ) {
 	idVec3 dir;
 	idVec3 local_dir;
 	float lengthSqr;
+
+	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+		return true;
+	}
 
 	dir = pos - physicsObj.GetOrigin();
 	physicsObj.GetGravityAxis().ProjectVector( dir, local_dir );
@@ -1711,6 +1782,11 @@ idAI::TurnTowardLeader
 =====================
 */
 bool idAI::TurnTowardLeader( bool faceLeaderByDefault ) {
+
+	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+		return true;
+	}
+
 	if ( !leader.GetEntity() ) {
 		return false;
 	}
@@ -1772,6 +1848,10 @@ Turn toward the given point using directional movement
 ============
 */
 bool idAI::DirectionalTurnToward ( const idVec3 &pos ) {
+	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+		return true;
+	}
+
 	static float moveDirOffset [ MOVEDIR_MAX ] = {
 		0.0f, 180.0f, -90.0f, 90.0f
 	};

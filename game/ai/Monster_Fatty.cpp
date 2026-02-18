@@ -228,6 +228,10 @@ rvMonsterFatty::CheckActions
 ================
 */
 bool rvMonsterFatty::CheckActions ( void ) {
+	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+		return true;
+	}
+
 	if ( PerformAction ( &actionWhipAttack, (checkAction_t)&rvMonsterFatty::CheckAction_WhipAttack, NULL ) ) {
 		return true;
 	}
