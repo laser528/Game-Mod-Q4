@@ -738,7 +738,7 @@ stateResult_t rvAITactical::State_Torso_SetPosture ( const stateParms_t& parms )
 rvAITactical::State_Torso_RangedAttack
 ================
 */
-stateResult_t rvAITactical::State_Torso_RangedAttack ( const stateParms_t& parms ) {
+stateResult_t rvAITactical::State_Torso_RangedAttack ( const stateParms_t& parms ) { // Laser
 	enum { 
 		STAGE_START,
 		STAGE_START_WAIT,

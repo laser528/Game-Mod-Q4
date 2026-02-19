@@ -418,11 +418,11 @@ stateResult_t rvWeaponBlaster::State_Fire ( const stateParms_t& parms ) {
 				return SRESULT_DONE;
 			}
 
-			if( player && !player->CanFire() )	{
-				fireHeldTime = 0;
-				SetState ( "Idle", 4 );
-				return SRESULT_DONE;
-			}
+			//if( player && !player->CanFire() )	{
+			//	fireHeldTime = 0;
+			//	SetState ( "Idle", 4 );
+			//	return SRESULT_DONE;
+			//}  // LASER I STOPPED THEM
 
 
 	

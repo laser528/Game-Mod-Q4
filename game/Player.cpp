@@ -1057,7 +1057,7 @@ int idInventory::HasAmmo( const char *weapon_classname ) {
 idInventory::UseAmmo
 ===============
 */
-bool idInventory::UseAmmo( int index, int amount ) {
+bool idInventory::UseAmmo( int index, int amount ) { // Laser MAybe
 	if ( !HasAmmo( index, amount ) ) {
 		return false;
 	}
@@ -3867,7 +3867,8 @@ void idPlayer::ExitCinematic( void ) {
 	SetAnimState( ANIMCHANNEL_LEGS, "Legs_Idle", 0 );
 
    	UpdateState();
-	noclip = true;
+	noclip = true; // Laser start Noclip 
+	gameLocal.SpawnConvoy(); // Laser Spawn convoy
 }
 
 /*
@@ -3963,7 +3964,7 @@ void idPlayer::StopFiring( void ) {
 idPlayer::FireWeapon
 ===============
 */
-void idPlayer::FireWeapon( void ) {
+void idPlayer::FireWeapon( void ) { // Laser maybe
 	idMat3 axis;
 	idVec3 muzzle;
 

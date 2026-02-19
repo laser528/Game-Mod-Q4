@@ -521,6 +521,7 @@ public:
 // twhitaker: guided projectiles
 	virtual void			GuidedProjectileIncoming( idGuidedProjectile * projectile ) { }
 // RAVEN END
+	void					setCanBeDamaged(bool takeDamage); // LASER can be damaged func Header
 
 protected:
 	renderEntity_t			renderEntity;						// used to present a model to the renderer

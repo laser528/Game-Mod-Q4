@@ -195,7 +195,7 @@ void rvAIManager::MarkReachBlocked(idAAS* aas, idReachability* reach, const idLi
 rvAIManager::ReactToPlayerAttack
 ================
 */
-void rvAIManager::ReactToPlayerAttack ( idPlayer* player, const idVec3 &origin, const idVec3 &dir ){
+void rvAIManager::ReactToPlayerAttack ( idPlayer* player, const idVec3 &origin, const idVec3 &dir ){ // Laser
 	idActor* actor;
 	float expandSize;
 	
@@ -445,7 +445,7 @@ rvAIManager::NearestTeammateToPoint
 Returns the teammate closest to the given point with the given parameters
 ================
 */
-idActor* rvAIManager::NearestTeammateToPoint ( idActor* from, idVec3 point, bool nonPlayer, float maxRange, bool checkFOV, bool checkLOS ) {
+idActor* rvAIManager::NearestTeammateToPoint ( idActor* from, idVec3 point, bool nonPlayer, float maxRange, bool checkFOV, bool checkLOS ) { // Laser HEAVILY IMPORTANT
 	idActor* actor = NULL;
 	idActor* closestActor = NULL;
 	float	distSqr;
@@ -501,7 +501,7 @@ rvAIManager::NearestTeammateEnemy
 Returns the closest enemy of an ally. 
 ================
 */
-idEntity* rvAIManager::NearestTeammateEnemy( idActor* from, float maxRange, bool checkFOV, bool checkLOS, idActor** closestAllyWithEnemy ) {
+idEntity* rvAIManager::NearestTeammateEnemy( idActor* from, float maxRange, bool checkFOV, bool checkLOS, idActor** closestAllyWithEnemy ) { // Laser MAYBE IMPORTANT
 	idActor*	actor;
 	idAI*		allyAI;
 	idEntity*	allyEnemy;

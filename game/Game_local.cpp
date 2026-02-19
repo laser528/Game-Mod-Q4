@@ -7524,7 +7524,7 @@ idEntity* idGameLocal::HitScan(
 	idEntity*		owner, 
 	bool			noFX,
 	float			damageScale,
-// twhitaker: added additionalIgnore parameter
+
 	idEntity*		additionalIgnore,
 	int				areas[ 2 ]
 	) {
@@ -7733,6 +7733,7 @@ idEntity* idGameLocal::HitScan(
 					// Let the entity add its own damage effect
 					if ( !g_perfTest_weaponNoFX.GetBool() ) {
 						ent->AddDamageEffect ( tr, dir, damage, owner );
+
 					}
 				} else { 
 					if ( actualHitEnt
@@ -7756,6 +7757,22 @@ idEntity* idGameLocal::HitScan(
 						ent->AddDamageEffect( tr, dir, hitscanDict.GetString ( "def_damage" ), owner );
 					}
 				}
+				// LASER TAKE ENT OR ACTUAL ENT AND DO STUFF LOL
+				// ===================================================
+				// LASER BRANCH LASER BRANCH LASER BRANCH LASER BRANCH
+				// ===================================================
+
+				if (owner && owner->IsType(idPlayer::GetClassType())) {
+					//gameLocal.SpawnConvoy();
+					//printf("Spawn Attempt");
+					gameLocal.Printf("hit: x: %f | y: %f | z: %f\n", collisionPoint.x, collisionPoint.y, collisionPoint.z);
+				}
+
+
+
+				
+
+				
 			}
 
 
@@ -8422,17 +8439,105 @@ bool idGameLocal::IsTeamPowerups( void ) {
 // LASER LASER LASER 
 /*
 =============
-LaserGameLocal::Getturn
+LaserGameLocal::Controll
 =============
 */
+
+static idEntity* Cmd_Spawn_f(const idCmdArgs& args, const idVec3& spawns) {
+#ifndef _MPBETA
+	const char* key, * value;
+	int			i;
+	float		yaw;
+	idVec3		org;
+	idPlayer* player;
+	idDict		dict;
+
+	player = gameLocal.GetLocalPlayer();
+
+
+
+	yaw = player->viewAngles.yaw;
+
+	value = args.Argv(1);
+	dict.Set("classname", value);
+	dict.Set("angle", va("%f", yaw + 180));
+
+	org = idAngles(0, yaw, 0).ToForward() * 80 + spawns;
+	dict.Set("origin", org.ToString());
+
+	for (i = 2; i < args.Argc() - 1; i += 2) {
+
+		key = args.Argv(i);
+		value = args.Argv(i + 1);
+
+		dict.Set(key, value);
+	}
+
+	// RAVEN BEGIN
+	// kfuller: want to know the name of the entity I spawned
+	idEntity* newEnt = NULL;
+	gameLocal.SpawnEntityDef(dict, &newEnt);
+	newEnt->setCanBeDamaged(false); // Laser immortality cause spawn deaths
+
+
+	if (newEnt) {
+		gameLocal.Printf("spawned entity '%s'\n", newEnt->name.c_str());
+		return newEnt;
+	}
+	// RAVEN END
+#endif // !_MPBETA
+}
+
+
+// STATE
 bool turn = false;
+idEntity* convoy[5] = {};
+bool init = false;
+
+const char unitCommands[10][133] = {
+	"spawn char_kane_strogg         npc_name 'Mathew Kane' npc_description 'Class: Commander'   team 0",
+	"spawn char_marine_medic        npc_name 'John Snow'   npc_description 'Class: Medic'       team 0",
+	"spawn monster_failed_transfer  npc_name 'John Snow'   npc_description 'Class: Shotgunner'  team 0",
+	"spawn char_marine              npc_name 'John Snow'   npc_description 'Class: Gunslinger'  team 0 def_head 'char_marinehead_helmet'",
+	"spawn char_marine_tech         npc_name 'John Snow'   npc_description 'Class: Technician'  team 0 def_head 'char_marinehead_helmet'",
+	// Advanced Classes
+	"spawn monster_gladiator        npc_name 'Mathew Kane' npc_description 'Class: Emperor'     team 0",
+	"spawn char_marine_medic_armed  npc_name 'John Snow'   npc_description 'Class: Surgeon'     team 0",
+	"spawn char_marine_shotgun      npc_name 'John Snow'   npc_description 'Class: War Chief'   team 0",
+	"spawn char_marine_hyperblaster npc_name 'John Snow'   npc_description 'Class: Reaper'      team 0 def_head 'char_marinehead_helmet'",
+	"spawn char_marine_tech_armed   npc_name 'John Snow'   npc_description 'Class: Tactician'   team 0 def_head 'char_marinehead_helmet'",
+
+};
+idVec3 spawns[5] = {
+	idVec3(9766.247070, -7043.187012, -13.725734),
+	idVec3(10009.479492, -7119.711914, -28.155727),
+	idVec3(9940.638672, -7010.305176, -2.728617),
+	idVec3(9867.611328, -6884.916016, 5.699490),
+	idVec3(9812.436523, -7013.122559, -5.711244),
+
+};
+
 bool idGameLocal::GetTurn() { 
 	return turn;
+}
+
+void idGameLocal::SpawnConvoy() {
+	idCmdArgs args;
+	if (init) return;
+
+	for (int i = 0; i < 5; i++) {
+		args.TokenizeString(unitCommands[i], false);
+		convoy[i] = Cmd_Spawn_f(args, spawns[i]);
+	}
+	init = true;
 }
 
 void idGameLocal::SetTurn(bool change) {
 	turn = change;
 }
+
+
+
 
 // RAVEN BEGIN
 // mwhitlock: Dynamic memory consolidation

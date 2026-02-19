@@ -3674,6 +3674,14 @@ void idEntity::Damage( idEntity *inflictor, idEntity *attacker, const idVec3 &di
 	}
 }
 
+// LASER 
+// ========================
+// LASER LASER LASER 
+// ========================
+void idEntity::setCanBeDamaged(bool takeDamage) {
+	fl.takedamage = takeDamage;
+}
+
 /*
 ============
 idEntity::SkipImpulse
@@ -4513,6 +4521,12 @@ idEntity::Event_StopEffect
 void idEntity::Event_StopEffect( const char *effectName ) {
 	StopEffect ( effectName );
 }
+
+
+// GET NAME 
+
+
+
 
 // END RAVEN
 

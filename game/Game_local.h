@@ -1104,6 +1104,7 @@ public:
 // LASER 
 	bool                    GetTurn(void);
 	void                    SetTurn(bool change);
+	void					SpawnConvoy(void);
 
 private:
 	char					clientGuids[ MAX_CLIENTS ][ CLIENT_GUID_LENGTH ];

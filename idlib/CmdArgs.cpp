@@ -81,6 +81,8 @@ void idCmdArgs::TokenizeString( const char *text, bool keepAsStrings ) {
 	idToken		token, number;
 	int			len, totalLen;
 
+
+
 	// clear previous args
 	argc = 0;
 
