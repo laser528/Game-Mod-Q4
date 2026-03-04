@@ -143,7 +143,7 @@ stays hidden behind his shield if getting shot at.
 ================
 */
 bool rvMonsterGladiator::CheckActions ( void ) {
-	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
 		return true;
 	}
 	// If not moving, try turning in place

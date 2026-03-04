@@ -139,6 +139,9 @@ idAI::idAI ( void ) {
 	actionAnimNum	= 0;
 	actionSkipTime	= 0;
 	actionTime		= 0;
+
+	canMakeActionLaser = false;
+	unitTurn = 0;
 }
 
 /*
@@ -2420,6 +2423,8 @@ bool idAI::GetAimDir(
 	return result;
 }
 
+
+
 /*
 =====================
 idAI::CreateProjectile
@@ -2493,8 +2498,8 @@ idProjectile* idAI::AttackRanged (
 	jointHandle_t	joint, 
 	idEntity*		target, 
 	const idVec3&	pushVelocity 
-	)	 
-{
+	)// Laser Attack Ranged	 
+{ 
 	float				attack_accuracy;
 	float				attack_cone;
 	float				attack_spread;
@@ -5147,5 +5152,16 @@ bool idAI::CheckDeathCausesMissionFailure( void )
 			return true;
 		}
 	}
+	return false;
+}
+
+// Laser 
+
+bool idAI::testTest(void) {
+	if (unitTurn) {
+		gameLocal.Printf("true\n");
+		return true;
+	}
+	gameLocal.Printf("false\n");
 	return false;
 }

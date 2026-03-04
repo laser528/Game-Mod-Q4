@@ -61,6 +61,8 @@ const int AITACTICAL_COVER_BITS				= (AITACTICAL_COVER_BIT|AITACTICAL_COVER_FLAN
 const int AITACTICAL_RANGED_BITS			= (AITACTICAL_RANGED_BIT);
 const int AITACTICAL_NONMOVING_BITS			= (AITACTICAL_NONE_BIT|AITACTICAL_TURRET_BIT|AITACTICAL_PASSIVE_BIT);
 
+
+
 typedef enum {
 	TALKMSG_NONE,
 	TALKMSG_PRIMARY,
@@ -431,12 +433,14 @@ class rvAITether;
 class idAI : public idActor {
 friend class rvAIManager;
 friend class idAASFindAttackPosition;
+friend class idGameLocal;
 public:
 	CLASS_PROTOTYPE( idAI );
 
 							idAI();
 							~idAI();
 
+	
 	void					Save							( idSaveGame *savefile ) const;
 	void					Restore							( idRestoreGame *savefile );
 
@@ -477,7 +481,7 @@ public:
    	bool					IsFacingEnt						( idEntity* targetEnt );
  	bool					IsCoverValid					( void ) const;
 	virtual bool			IsCrouching						( void ) const;
-
+	bool                    MoveToUnprotected(const idVec3& pos, float range);  // LASER IMPOR
 
 public:
 
@@ -546,6 +550,10 @@ public:
 
 	idEntityPtr<idEntity>	pusher;
 	idEntityPtr<idEntity>	scriptedActionEnt;
+
+	bool                    canMakeActionLaser; // Laser
+	int						unitTurn;
+
 
 	// script variables
 	struct aiFlags_s {
@@ -694,7 +702,7 @@ public:
 									AI helpers
 	===============================================================================
 	*/
-
+	
 public:
 
 	void					UpdateHelper					( void );
@@ -853,6 +861,7 @@ public:
 
 	float					announceRate;			// How often (0 - 1.0f) the AI will make certain announcements.
 
+
 	rvAICombat_t			combat;					// Members related to combat state
 	rvAIPassive_t			passive;				// Members related to passive state
 	rvAIEnemy_t				enemy;					// Members related to tracking enemies
@@ -869,6 +878,10 @@ public:
 	idEntityPtr<rvAIHelper>	helperIdeal;
 	idEntityPtr<idActor>	leader;
 	idEntityPtr<rvSpawner>	spawner;
+
+
+
+	bool				 	    testTest 						(void); // Laser
 
 	bool						ValidateCover					( void );
 

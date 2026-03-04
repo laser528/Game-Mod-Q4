@@ -189,7 +189,7 @@ rvMonsterBerserker::CheckActions
 ================
 */
 bool rvMonsterBerserker::CheckActions ( void ) {
-	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
 		return true;
 	}
 
@@ -233,7 +233,7 @@ bool rvMonsterBerserker::CheckActions ( void ) {
 				}
 			}
 		}
-		if ( PerformAction ( &actionRangedAttack,(checkAction_t)&rvMonsterBerserker::CheckAction_RangedAttack, &actionTimerRangedAttack ) ) {
+		if ( PerformAction ( &actionRangedAttack,(checkAction_t)&rvMonsterBerserker::CheckAction_RangedAttack, &actionTimerRangedAttack ) ) { // Laser proably important 
 			return true;
 		}
 	}

@@ -843,6 +843,8 @@ public:
 
 	void					LookAtEntity					( idEntity *ent, float duration );
 
+	
+
 // ----------------------------- Variables ------------------------------------
 
 	int						actionAnimNum;			// Index of animation to use for the upcoming action
@@ -995,6 +997,7 @@ public:
 
 	void					DrawRoute						( void ) const;
 	void					DrawTactical					( void );
+	
 
 	/*
 	===============================================================================
@@ -1056,6 +1059,7 @@ public:
 	virtual bool			CheckAction_MeleeAttack				( rvAIAction* action, int animNum );
 	bool					CheckAction_LeapAttack				( rvAIAction* action, int animNum );
 	virtual bool			CheckAction_JumpBack				( rvAIAction* action, int animNum );
+	
 
 	/*
 	===============================================================================

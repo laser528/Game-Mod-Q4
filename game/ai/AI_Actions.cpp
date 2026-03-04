@@ -399,7 +399,7 @@ bool idAI::CheckActions ( void ) {
 idAI::PerformAction
 ================
 */
-void idAI::PerformAction ( const char* stateName, int blendFrames, bool noPain ) {
+void idAI::PerformAction ( const char* stateName, int blendFrames, bool noPain ) { // Laser Maybe Important
 	// Allow movement in actions
 	move.fl.allowAnimMove = true;
 
@@ -431,7 +431,7 @@ void idAI::PerformAction ( const char* stateName, int blendFrames, bool noPain )
 	OnStartAction ( );
 }
 
-bool idAI::PerformAction ( rvAIAction* action, bool (idAI::*condition)(rvAIAction*,int), rvAIActionTimer* timer ) {
+bool idAI::PerformAction ( rvAIAction* action, bool (idAI::*condition)(rvAIAction*,int), rvAIActionTimer* timer ) { // Laser maybe important
 	// If we arent ignoring simple think then dont perform this action on a simple think frame
 	if ( !action->fl.noSimpleThink && aifl.simpleThink ) {
 		return false;

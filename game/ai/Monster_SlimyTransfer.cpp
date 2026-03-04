@@ -99,7 +99,7 @@ rvMonsterSlimyTransfer::CheckActions
 ================
 */
 bool rvMonsterSlimyTransfer::CheckActions ( void ) {
-	if (!gameLocal.GetTurn()) { // LASER stop spwaned movement
+if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
 		return true;
 	}
 	if ( PerformAction ( &actionVomitAttack, (checkAction_t)&idAI::CheckAction_RangedAttack, &actionTimerRangedAttack ) ) {

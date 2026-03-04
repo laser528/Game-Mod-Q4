@@ -107,11 +107,11 @@ void rvAITactical::Spawn ( void ) {
 rvAITactical::Think
 ================
 */
-void rvAITactical::Think ( void ) {
+void rvAITactical::Think ( void ) { // Laser
 	idAI::Think ( );
 
 	// If not simple thinking and not in an action, update the posture 
-	if ( !(aifl.scripted&&move.moveCommand==MOVE_NONE) && aifl.awake && !aifl.simpleThink && !aifl.action && !aifl.dead ) {
+	if ( !(aifl.scripted&&move.moveCommand==MOVE_NONE) && aifl.awake && !aifl.simpleThink && !aifl.action && !aifl.dead && !(static_cast<idAI*>(this)->canMakeActionLaser)) { // Laser
 		if ( UpdatePosture ( ) ) {
 			PerformAction ( "Torso_SetPosture", 4, true );
 		}

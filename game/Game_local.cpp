@@ -7765,7 +7765,8 @@ idEntity* idGameLocal::HitScan(
 				if (owner && owner->IsType(idPlayer::GetClassType())) {
 					//gameLocal.SpawnConvoy();
 					//printf("Spawn Attempt");
-					gameLocal.Printf("hit: x: %f | y: %f | z: %f\n", collisionPoint.x, collisionPoint.y, collisionPoint.z);
+					gameLocal.selected(ent, collisionPoint);
+					//gameLocal.Printf("hit: x: %f | y: %f | z: %f\n", collisionPoint.x, collisionPoint.y, collisionPoint.z);
 				}
 
 
@@ -8489,9 +8490,10 @@ static idEntity* Cmd_Spawn_f(const idCmdArgs& args, const idVec3& spawns) {
 }
 
 
-// STATE
-bool turn = false;
+// STATE L
+int turn = 1;
 idEntity* convoy[5] = {};
+idEntity* selectedUnit = NULL;
 bool init = false;
 
 const char unitCommands[10][133] = {
@@ -8528,6 +8530,9 @@ void idGameLocal::SpawnConvoy() {
 	for (int i = 0; i < 5; i++) {
 		args.TokenizeString(unitCommands[i], false);
 		convoy[i] = Cmd_Spawn_f(args, spawns[i]);
+
+		idAI* unitAI = static_cast<idAI*>(convoy[i]);
+		unitAI->unitTurn = 1;
 	}
 	init = true;
 }
@@ -8536,6 +8541,53 @@ void idGameLocal::SetTurn(bool change) {
 	turn = change;
 }
 
+
+
+
+
+void idGameLocal::selected(idEntity* ent, idVec3& pos) {
+	float range = 42;
+
+	if ( !ent->IsType( idAI::GetClassType()) ) {
+		return;
+	}
+
+
+	if (selectedUnit == NULL && ent != NULL) { // Select Unit
+		for (int i = 0; i < 5; i++) {
+			if (convoy[i] == ent) {
+				gameLocal.Printf("Selected");
+				selectedUnit = ent;
+				return;
+			}
+		}
+
+		
+
+	} else if(selectedUnit != NULL) { // Move Unit
+		gameLocal.Printf("Move");
+		
+		idAI* unitAI = static_cast<idAI*>(selectedUnit);
+		
+		unitAI->canMakeActionLaser = true;
+		
+		
+		// unitAI->FaceEntity(ent);
+
+
+		//unitAI->MoveTo(pos, 420000);
+		
+		unitAI->MoveToEntity(ent, range);
+
+		
+		
+		// MoveToAttack( idEntity *ent, int attack_anim )
+		// MoveToEntity( idEntity *ent, float range )
+		// MoveTo ( const idVec3 &pos, float range )
+		selectedUnit = NULL;
+	}
+
+}
 
 
 
