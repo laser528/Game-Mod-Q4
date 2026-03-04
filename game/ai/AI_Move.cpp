@@ -933,7 +933,7 @@ idAI::MoveToTether
 bool idAI::MoveToTether ( rvAITether* tether ) {
 	aasGoal_t	goal;
 
-if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
+	if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
 		return true;
 	}
 
@@ -1229,9 +1229,11 @@ bool idAI::MoveTo ( const idVec3 &pos, float range ) { // LASER IMPORTANT
 		return true;
 	}
 
-	if ( !aas ) {
+	if (!aas) { // Laser !aas
 		return false;
 	}
+
+	gameLocal.Printf("AAS NOT AN ISSUE\n"); // Laser
 
 	org     = pos;
 	areaNum = PointReachableAreaNum( org );

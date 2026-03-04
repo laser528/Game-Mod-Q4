@@ -7655,6 +7655,11 @@ idEntity* idGameLocal::HitScan(
 			actualHitEnt   = NULL;
 			start		   = collisionPoint;
 
+			
+
+
+
+			
 			// Keep tracing if we hit water
 			if ( (ent->GetPhysics()->GetContents() & CONTENTS_WATER) || (tr.c.material && (tr.c.material->GetContentFlags() & CONTENTS_WATER)) ) {
 				// Apply force to the water entity that was hit
@@ -7757,6 +7762,8 @@ idEntity* idGameLocal::HitScan(
 						ent->AddDamageEffect( tr, dir, hitscanDict.GetString ( "def_damage" ), owner );
 					}
 				}
+
+
 				// LASER TAKE ENT OR ACTUAL ENT AND DO STUFF LOL
 				// ===================================================
 				// LASER BRANCH LASER BRANCH LASER BRANCH LASER BRANCH
@@ -7768,8 +7775,6 @@ idEntity* idGameLocal::HitScan(
 					gameLocal.selected(ent, collisionPoint);
 					//gameLocal.Printf("hit: x: %f | y: %f | z: %f\n", collisionPoint.x, collisionPoint.y, collisionPoint.z);
 				}
-
-
 
 				
 
@@ -8494,6 +8499,7 @@ static idEntity* Cmd_Spawn_f(const idCmdArgs& args, const idVec3& spawns) {
 int turn = 1;
 idEntity* convoy[5] = {};
 idEntity* selectedUnit = NULL;
+idEntity* pointerEntity = NULL; // marine head as anchor due to unrealiability of move to
 bool init = false;
 
 const char unitCommands[10][133] = {
@@ -8518,6 +8524,7 @@ idVec3 spawns[5] = {
 	idVec3(9812.436523, -7013.122559, -5.711244),
 
 };
+const char pointerCommand[1][50] = {"spawn char_marinehead_helmet_medic"};
 
 bool idGameLocal::GetTurn() { 
 	return turn;
@@ -8546,11 +8553,9 @@ void idGameLocal::SetTurn(bool change) {
 
 
 void idGameLocal::selected(idEntity* ent, idVec3& pos) {
-	float range = 42;
+	float acceptableRangeToTarget = 42;
 
-	if ( !ent->IsType( idAI::GetClassType()) ) {
-		return;
-	}
+
 
 
 	if (selectedUnit == NULL && ent != NULL) { // Select Unit
@@ -8562,28 +8567,31 @@ void idGameLocal::selected(idEntity* ent, idVec3& pos) {
 			}
 		}
 
-		
 
-	} else if(selectedUnit != NULL) { // Move Unit
-		gameLocal.Printf("Move");
-		
+	} else if (selectedUnit != NULL && ent->IsType(idAI::GetClassType())) {// Move Unit to Ent
+
+		gameLocal.Printf("Move Ent\n");
+
 		idAI* unitAI = static_cast<idAI*>(selectedUnit);
-		
 		unitAI->canMakeActionLaser = true;
-		
-		
-		// unitAI->FaceEntity(ent);
+		unitAI->MoveToEntity(ent, acceptableRangeToTarget);
+		selectedUnit = NULL;
 
+	} else if(selectedUnit != NULL && !ent->IsType(idAI::GetClassType())) { // Move Unit to pos
+		gameLocal.Printf("Move pos\n");
 
-		//unitAI->MoveTo(pos, 420000);
-		
-		unitAI->MoveToEntity(ent, range);
+		idCmdArgs args;
+		args.TokenizeString(pointerCommand[0], false);
+		pointerEntity = Cmd_Spawn_f(args, pos);
 
-		
-		
+		idAI* unitAI = static_cast<idAI*>(selectedUnit);
+		unitAI->canMakeActionLaser = true;
+		unitAI->MoveToEntity(pointerEntity, acceptableRangeToTarget);
+	
 		// MoveToAttack( idEntity *ent, int attack_anim )
 		// MoveToEntity( idEntity *ent, float range )
 		// MoveTo ( const idVec3 &pos, float range )
+		// unitAI->FaceEntity(ent);
 		selectedUnit = NULL;
 	}
 
