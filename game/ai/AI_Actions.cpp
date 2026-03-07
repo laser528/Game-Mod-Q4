@@ -278,23 +278,25 @@ idAI::CheckAction_RangedAttack
 ================
 */
 bool idAI::CheckAction_RangedAttack ( rvAIAction* action, int animNum ) {
-	gameLocal.Printf("Check to Range Attack\n");
+	
 	if (gameLocal.GetTurn() != unitTurn || !canMakeAttackLaser) { // LASER stop spwaned movement
 		return false;
 	}
-	gameLocal.Printf("gotTO 1\n");
+	
 	if ( !enemy.ent || !enemy.fl.inFov ) {
 		return false;
 	}
-	gameLocal.Printf("gotTO 2\n");
+	
 	if ( !IsEnemyRecentlyVisible ( ) || enemy.ent->DistanceTo ( enemy.lastKnownPosition ) > 128.0f ) {
 		return false;
 	}
-	gameLocal.Printf("gotTO 3\n");
+	
 	if ( animNum != -1 && !CanHitEnemyFromAnim( animNum ) ) {
 		return false;
 	}
-	gameLocal.Printf("gotTO 4\n");
+	
+	gameLocal.endAction(this, 2);
+	gameLocal.checkTimeOut();
 	return true;
 }
 

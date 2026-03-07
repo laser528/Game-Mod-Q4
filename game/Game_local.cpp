@@ -8495,14 +8495,22 @@ static idEntity* Cmd_Spawn_f(const idCmdArgs& args, const idVec3& spawns) {
 #endif // !_MPBETA
 }
 
-//thread = new idThread(); // Laser thread info
-//// RAVEN BEGIN
-//// mwhitlock: Dynamic memory consolidation
-//RV_POP_HEAP();
-//// RAVEN END
-//thread->SetThreadName(name.c_str()); // LASER THREAD INFO
-//thread->CallFunction( const function_t *func, bool clearStack );
-//thread->DelayedStart(0);
+struct stats {
+	int overHealth = 0;    // 10% Base health + base Health
+	int mov = 1;           // Move range modifier???? idunno
+	int tech = 1;		   // Extra consecutive attacks 
+	int shields = 0;       // Shields negate dmg taken for a turn 
+
+	int exp;
+	int level;         // Should never be zero 
+	int superClass;    // Determines if unit has achieved its super/Promoted class 
+};
+struct growthRates {
+	float overHealth;    
+	float mov;           
+	float tech;		    
+	float shields;       
+};
 
 // STATE L
 int turn = 1;
@@ -8511,10 +8519,15 @@ idEntity* selectedUnit = NULL;
 idEntity* pointerEntity = NULL; // marine head as anchor due to unrealiability of move to
 int convoyTurns[5][2];
 int convoyActions[5];
+stats unitStats[5];
+growthRates unitGrowthRates[5];
+int unitTurnAttacks[5];
+int attackTimeOuts[5];
+
 bool init = false;
 // char_kane_strogg, char_marine_shotgun
 const char unitCommands[10][133] = {
-	"spawn char_kane_strogg        npc_name 'Mathew Kane' npc_description 'Class: Commander'   team 0",
+	"spawn char_kane_strogg         npc_name 'Mathew Kane' npc_description 'Class: Commander'   team 0",
 	"spawn char_marine_medic        npc_name 'John Snow'   npc_description 'Class: Medic'       team 0",
 	"spawn char_marine_shotgun	    npc_name 'John Snow'   npc_description 'Class: Shotgunner'  team 0",
 	"spawn char_marine              npc_name 'John Snow'   npc_description 'Class: Gunslinger'  team 0 def_head 'char_marinehead_helmet'",
@@ -8541,11 +8554,33 @@ bool idGameLocal::GetTurn() {
 	return turn;
 }
 
+void idGameLocal::levelUp(int unit) {
+	if (random.RandomFloat() < unitGrowthRates[unit].overHealth) {
+		unitStats[unit].overHealth += 1;
+		// Update Health
+	}
+	if (random.RandomFloat() < unitGrowthRates[unit].mov) {
+		unitStats[unit].mov += 1;
+		// No Update
+	}
+	if (random.RandomFloat() < unitGrowthRates[unit].tech) {
+		unitStats[unit].tech += 1;
+		// No Update
+	}
+	if (random.RandomFloat() < unitGrowthRates[unit].shields) {
+		unitStats[unit].shields += 1;
+		// No Update
+	}
+
+}
+
+
 void idGameLocal::SpawnConvoy() {
 	idCmdArgs args;
 	if (init) return;
 
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 5; i++) { 
+		// spawn units
 		args.TokenizeString(unitCommands[i], false);
 		convoy[i] = Cmd_Spawn_f(args, spawns[i]);
 
@@ -8553,15 +8588,23 @@ void idGameLocal::SpawnConvoy() {
 
 		idAI* unitAI = static_cast<idAI*>(convoy[i]);
 		unitAI->unitTurn = 1;
-		
-	}
-	for (int i = 0; i < 5; i++) {
+		// Init convoy blocks
 		convoyTurns[i][0] = 1;
 		convoyTurns[i][1] = 1;
 
 		convoyActions[i] = -1;
+		// Init stats 
+		unitGrowthRates[i].overHealth = random.RandomFloat();
+		unitGrowthRates[i].mov = random.RandomFloat();
+		unitGrowthRates[i].tech = random.RandomFloat();
+		unitGrowthRates[i].shields = random.RandomFloat();
 
+		unitStats[i].level = random.RandomInt(3) + 1; // 1-4 Lvl
+		for (int i = 0; i < unitStats[i].level; i++) { // Level rewards
+			levelUp(i);
+		}
 	}
+	
 
 	init = true;
 }
@@ -8577,6 +8620,7 @@ static void attack(idEntity* target, idAI* unitAi) {
 	//unitAi->FaceEntity(target);
 	//unitAi->rangeAttackLaser(target, 0);
 }
+
 
 
 //thread = new idThread(func); // Laser
@@ -8646,6 +8690,24 @@ void idGameLocal::selected(idEntity* ent, idVec3& pos) {
 
 }
 
+void idGameLocal::checkTimeOut() {
+	gameLocal.Printf("Time: %i", time);
+	if (!turn) {
+		// Enemy Logic
+	}
+	for (int i = 0; i < 5; i++) {
+		if (!attackTimeOuts[i]) continue;
+		if ((time - attackTimeOuts[i]) > 60000) {
+			idAI* unitAI = static_cast<idAI*>(convoy[i]);
+			attackTimeOuts[i] = 0;
+			unitTurnAttacks[i] = unitStats[i].tech;
+			convoyTurns[i][0] = false;
+			convoyTurns[i][1] = false;
+			unitAI->canMakeAttackLaser = false;
+		}
+	}
+}
+
 void idGameLocal::endAction(const idAI* ai, int Action) {
 	const idEntity* ent = static_cast<const idEntity*>(ai);
 
@@ -8654,16 +8716,47 @@ void idGameLocal::endAction(const idAI* ai, int Action) {
 	for (int i = 0; i < 5; i++) {
 		if ((ent->entityNumber) == (convoy[i]->entityNumber)) {
 			idAI* unitAI = static_cast<idAI*>(convoy[i]);
-			
-			gameLocal.Printf("endAction: 2");
-			unitAI->canMakeActionLaser = false;
-			unitAI->StopMove(MOVE_STATUS_DEST_NOT_FOUND);
 
-			if (convoyActions[ent->convoyPos] != -1) {
-				gameLocal.Printf("endAction: 3");
-				attack(entities[convoyActions[ent->convoyPos]], unitAI);
-				convoyActions[ent->convoyPos] = -1;
+
+			switch (Action) {
+			case 1: // END MOVE
+				gameLocal.Printf("endAction: 2");
+				unitAI->canMakeActionLaser = false;
+				unitAI->StopMove(MOVE_STATUS_DEST_NOT_FOUND);
+
+				if (convoyActions[ent->convoyPos] != -1) {
+					gameLocal.Printf("endAction: 3");
+					attackTimeOuts[i] = time;
+					attack(entities[convoyActions[ent->convoyPos]], unitAI);
+					convoyActions[ent->convoyPos] = -1;
+				}
+				break;
+			case 2: // END ATTACK
+				if (unitTurnAttacks[i] == unitStats[i].tech) {
+					convoyTurns[i][0] = false;
+					convoyTurns[i][1] = false;
+					unitAI->canMakeAttackLaser = false;
+				}
+				if ((unitStats[i].exp += (random.RandomInt(25)+1)) >= 100) {
+					int carry = unitStats[i].exp - 100;
+					levelUp(i);
+					unitStats[i].exp = carry;
+
+				}
+				unitTurnAttacks[i] += 1;
+				break;
+			case 3:
+				
+				break;
+			default:
+				
+				break;
 			}
+
+
+
+			
+
 			
 
 

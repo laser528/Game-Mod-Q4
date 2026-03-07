@@ -1139,7 +1139,6 @@ idAI::Think
 =====================
 */
 void idAI::Think( void ) {
-
 	// if we are completely closed off from the player, don't do anything at all
 	if ( CheckDormant() ) {
 		return;
