@@ -5166,6 +5166,7 @@ bool idAI::testTest(void) {
 	return false;
 }
 
-void idAI::rangeAttackLaser(void) {
+void idAI::rangeAttackLaser(idEntity* ent, int attack_anim) { 
+	// MoveToAttack(ent, animator.GetAnim("ranged_attack"));
 	PerformAction(&actionRangedAttack, (checkAction_t)&idAI::CheckAction_RangedAttack, &actionTimerRangedAttack);
 }

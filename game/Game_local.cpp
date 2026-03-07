@@ -8512,17 +8512,17 @@ idEntity* pointerEntity = NULL; // marine head as anchor due to unrealiability o
 int convoyTurns[5][2];
 int convoyActions[5];
 bool init = false;
-
+// char_kane_strogg, char_marine_shotgun
 const char unitCommands[10][133] = {
-	"spawn char_kane_strogg         npc_name 'Mathew Kane' npc_description 'Class: Commander'   team 0",
+	"spawn char_kane_strogg        npc_name 'Mathew Kane' npc_description 'Class: Commander'   team 0",
 	"spawn char_marine_medic        npc_name 'John Snow'   npc_description 'Class: Medic'       team 0",
-	"spawn monster_failed_transfer  npc_name 'John Snow'   npc_description 'Class: Shotgunner'  team 0",
+	"spawn char_marine_shotgun	    npc_name 'John Snow'   npc_description 'Class: Shotgunner'  team 0",
 	"spawn char_marine              npc_name 'John Snow'   npc_description 'Class: Gunslinger'  team 0 def_head 'char_marinehead_helmet'",
 	"spawn char_marine_tech         npc_name 'John Snow'   npc_description 'Class: Technician'  team 0 def_head 'char_marinehead_helmet'",
 	// Advanced Classes
 	"spawn monster_gladiator        npc_name 'Mathew Kane' npc_description 'Class: Emperor'     team 0",
 	"spawn char_marine_medic_armed  npc_name 'John Snow'   npc_description 'Class: Surgeon'     team 0",
-	"spawn char_marine_shotgun      npc_name 'John Snow'   npc_description 'Class: War Chief'   team 0",
+	"spawn monster_gunner	        npc_name 'John Snow'   npc_description 'Class: War Chief'   team 0",
 	"spawn char_marine_hyperblaster npc_name 'John Snow'   npc_description 'Class: Reaper'      team 0 def_head 'char_marinehead_helmet'",
 	"spawn char_marine_tech_armed   npc_name 'John Snow'   npc_description 'Class: Tactician'   team 0 def_head 'char_marinehead_helmet'",
 
@@ -8553,6 +8553,7 @@ void idGameLocal::SpawnConvoy() {
 
 		idAI* unitAI = static_cast<idAI*>(convoy[i]);
 		unitAI->unitTurn = 1;
+		
 	}
 	for (int i = 0; i < 5; i++) {
 		convoyTurns[i][0] = 1;
@@ -8572,9 +8573,9 @@ void idGameLocal::SetTurn(bool change) {
 
 static void attack(idEntity* target, idAI* unitAi) {
 	gameLocal.Printf("ATTCK\n");
-	unitAi->canMakeActionLaser = true;
-	unitAi->FaceEntity(target);
-	unitAi->rangeAttackLaser();
+	unitAi->canMakeAttackLaser = true;
+	//unitAi->FaceEntity(target);
+	//unitAi->rangeAttackLaser(target, 0);
 }
 
 
@@ -8582,7 +8583,7 @@ static void attack(idEntity* target, idAI* unitAi) {
 //thread->DelayedStart(0);
 
 void idGameLocal::selected(idEntity* ent, idVec3& pos) {
-	float acceptableRangeToTarget = 42;
+	float acceptableRangeToTarget = 224; //42
 
 	if (!init) {
 		return;

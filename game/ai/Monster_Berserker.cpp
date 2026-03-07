@@ -171,15 +171,23 @@ rvMonsterBerserker::CheckAction_RangedAttack
 ================
 */
 bool rvMonsterBerserker::CheckAction_RangedAttack ( rvAIAction* action, int animNum ) {
+	gameLocal.Printf("Check to Range Attack\n");
+	if (gameLocal.GetTurn() != unitTurn || !canMakeAttackLaser) { // LASER stop spwaned movement
+		return false;
+	}
+	gameLocal.Printf("gotTO 1\n");
 	if ( !enemy.ent || !enemy.fl.inFov ) {
 		return false;
 	}
+	gameLocal.Printf("gotTO 2\n");
 	if ( !IsEnemyRecentlyVisible ( ) || enemy.ent->DistanceTo ( enemy.lastKnownPosition ) > 128.0f ) {
 		return false;
 	}
+	gameLocal.Printf("gotTO 3\n");
 	if ( animNum != -1 && !Berz_CanHitEnemyFromAnim( animNum ) ) {
 		return false;
 	}
+	gameLocal.Printf("gotTO 4\n");
 	return true;
 }
 
@@ -189,17 +197,28 @@ rvMonsterBerserker::CheckActions
 ================
 */
 bool rvMonsterBerserker::CheckActions ( void ) {
-if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
-		return true;
-	}
 
 	// Pop-up attack is a forward moving melee attack that throws the enemy up in the air
 	if ( PerformAction ( &actionPopupAttack, (checkAction_t)&idAI::CheckAction_LeapAttack, &actionTimerSpecialAttack ) ) {
+		if (gameLocal.GetTurn() != unitTurn || unitTurn == 1) { // LASER stop spwaned movement
+			return false;
+		}
 		return true;
 	}
 
+	//if (gameLocal.GetTurn() == unitTurn && canMakeAttackLaser) { // LASER stop spwaned movement
+	//	gameLocal.Printf("goto 2");
+	//	if (PerformAction(&actionRangedAttack, (checkAction_t)&rvMonsterBerserker::CheckAction_RangedAttack, &actionTimerRangedAttack)) { // Laser proably important 
+	//		return true;
+	//	}
+	//	return false;
+	//}  // I Added BLOCK ME LASER
+
 	// Charge attack is where the berserker will charge up his spike and slam it in to the ground
 	if ( PerformAction ( &actionChargeAttack, (checkAction_t)&rvMonsterBerserker::CheckAction_ChargeAttack, &actionTimerSpecialAttack ) ) {
+		if (gameLocal.GetTurn() != unitTurn || unitTurn == 1) { // LASER stop spwaned movement
+			return false;
+		}
 		return true;
 	}
 
@@ -245,6 +264,11 @@ rvMonsterBerserker::FilterTactical
 ================
 */
 int rvMonsterBerserker::FilterTactical ( int availableTactical ) {
+	if (unitTurn == 1) { // LASER stop spwaned movement
+		availableTactical |= AITACTICAL_RANGED_BIT;
+		return idAI::FilterTactical(availableTactical);
+	}
+
 	if ( move.moveCommand == MOVE_TO_ENEMY && move.moveStatus == MOVE_STATUS_DEST_UNREACHABLE ) {
 		availableTactical |= AITACTICAL_RANGED_BIT;
 	} else if ( combat.tacticalCurrent != AITACTICAL_RANGED 
@@ -266,6 +290,10 @@ Enable/Disable the ranged attack based on whether the berzerker needs it
 ================
 */
 void rvMonsterBerserker::OnTacticalChange ( aiTactical_t oldTactical ) {
+	if ( unitTurn == 1) { // LASER stop spwaned movement
+		actionRangedAttack.fl.disabled = false;
+		return;
+	}
 	switch ( combat.tacticalCurrent ) {
 		case AITACTICAL_MELEE:
 			actionRangedAttack.fl.disabled = true;

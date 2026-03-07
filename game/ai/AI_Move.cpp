@@ -986,7 +986,7 @@ bool idAI::MoveToAttack ( idEntity *ent, int attack_anim ) { // Laser Maybe Intr
 	idVec3			pos;
 
 
-	if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
+	if (gameLocal.GetTurn() != unitTurn || unitTurn == 1) { // LASER stop spwaned movement
 		return true;
 	}
 
@@ -1445,7 +1445,7 @@ idAI::WanderAround
 bool idAI::WanderAround( void ) {
 	idVec3 dest;
 	
-if (true) { // LASER stop spwaned movement
+	if (true) { // LASER stop spwaned movement
 		return true;
 	}
 
@@ -1537,7 +1537,7 @@ bool idAI::NewWanderDir( const idVec3 &dest ) {
 	float	d[ 3 ];
 	float	tdir, olddir, turnaround;
 
-if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
+	if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
 		return true;
 	}
 

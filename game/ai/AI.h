@@ -551,7 +551,8 @@ public:
 	idEntityPtr<idEntity>	pusher;
 	idEntityPtr<idEntity>	scriptedActionEnt;
 
-	bool                    canMakeActionLaser; // Laser
+	bool                    canMakeActionLaser = false; // Laser
+	bool                    canMakeAttackLaser = false; 
 	int						unitTurn;
 
 
@@ -799,7 +800,7 @@ public:
 
 	//
 	// Laser 
-	void					rangeAttackLaser				( void );
+	void					rangeAttackLaser				(idEntity* ent, int attack_anim);
 
 
 	//

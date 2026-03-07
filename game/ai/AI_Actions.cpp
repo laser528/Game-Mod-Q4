@@ -278,15 +278,23 @@ idAI::CheckAction_RangedAttack
 ================
 */
 bool idAI::CheckAction_RangedAttack ( rvAIAction* action, int animNum ) {
+	gameLocal.Printf("Check to Range Attack\n");
+	if (gameLocal.GetTurn() != unitTurn || !canMakeAttackLaser) { // LASER stop spwaned movement
+		return false;
+	}
+	gameLocal.Printf("gotTO 1\n");
 	if ( !enemy.ent || !enemy.fl.inFov ) {
 		return false;
 	}
+	gameLocal.Printf("gotTO 2\n");
 	if ( !IsEnemyRecentlyVisible ( ) || enemy.ent->DistanceTo ( enemy.lastKnownPosition ) > 128.0f ) {
 		return false;
 	}
+	gameLocal.Printf("gotTO 3\n");
 	if ( animNum != -1 && !CanHitEnemyFromAnim( animNum ) ) {
 		return false;
 	}
+	gameLocal.Printf("gotTO 4\n");
 	return true;
 }
 
@@ -296,6 +304,9 @@ idAI::CheckAction_MeleeAttack
 ================
 */
 bool idAI::CheckAction_MeleeAttack ( rvAIAction* action, int animNum ) {
+	if (gameLocal.GetTurn() != unitTurn || unitTurn == 1) { // LASER stop spwaned movement
+		return false;
+	}
 	if ( !enemy.ent || !enemy.fl.inFov ) {
 		return false;
 	}
@@ -311,6 +322,9 @@ idAI::CheckAction_LeapAttack
 ================
 */
 bool idAI::CheckAction_LeapAttack ( rvAIAction* action, int animNum ) {
+	if (gameLocal.GetTurn() != unitTurn || !canMakeAttackLaser) { // LASER stop spwaned movement
+		return false;
+	}
 	if ( !enemy.ent || !enemy.fl.inFov ) {
 		return false;
 	}
@@ -376,10 +390,17 @@ bool idAI::CheckActions ( void ) {
 	// Actions are limited at a cover position to shooting and leaning
 	if ( IsBehindCover ( ) ) {
 		// Test ranged attack first
+		if (gameLocal.GetTurn() != unitTurn || !canMakeAttackLaser) { // LASER stop spwaned movement
+			return false;
+		}
 		if ( PerformAction ( &actionRangedAttack, (checkAction_t)&idAI::CheckAction_RangedAttack, &actionTimerRangedAttack ) ) {
 			return true;
 		}
 	} else {
+		
+		if (gameLocal.GetTurn() != unitTurn || !canMakeAttackLaser) { // LASER stop spwaned movement
+			return false;
+		}
 		if ( PerformAction ( &actionEvadeLeft,   (checkAction_t)&idAI::CheckAction_EvadeLeft, &actionTimerEvade )			 ||
 			 PerformAction ( &actionEvadeRight,  (checkAction_t)&idAI::CheckAction_EvadeRight, &actionTimerEvade )			 ||
 			 PerformAction ( &actionJumpBack,	 (checkAction_t)&idAI::CheckAction_JumpBack, &actionTimerEvade )			 ||
@@ -433,6 +454,9 @@ void idAI::PerformAction ( const char* stateName, int blendFrames, bool noPain )
 
 bool idAI::PerformAction ( rvAIAction* action, bool (idAI::*condition)(rvAIAction*,int), rvAIActionTimer* timer ) { // Laser maybe important
 	// If we arent ignoring simple think then dont perform this action on a simple think frame
+	if (gameLocal.GetTurn() != unitTurn || !canMakeAttackLaser) { // LASER stop spwaned movement
+		return false;
+	}
 	if ( !action->fl.noSimpleThink && aifl.simpleThink ) {
 		return false;
 	}
