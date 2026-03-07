@@ -544,14 +544,32 @@ void idAI::SetAAS( void ) {
 idAI::ReachedPos
 =====================
 */
+
 bool idAI::ReachedPos( const idVec3 &pos, const aiMoveCommand_t moveCommand, float range ) const {
 	// When moving towards the enemy just see if our bounding box touches the desination
-	if ( moveCommand == MOVE_TO_ENEMY ) {
+	if ( moveCommand == MOVE_TO_ENEMY ) { 
 		if ( !enemy.ent || physicsObj.GetAbsBounds().IntersectsBounds( enemy.ent->GetPhysics()->GetAbsBounds().Expand( range ) ) ) {
 			return true;
 		}
 		return false;
 	}
+	
+	// Laser added 
+	if (moveCommand == MOVE_TO_ENTITY) {
+		float offset = range * 1.0f;
+		idBounds bnds;
+
+		bnds = idBounds(idVec3(-offset, -offset, -offset), idVec3(offset, offset, offset));
+		bnds.TranslateSelf(physicsObj.GetOrigin());
+
+		if (bnds.ContainsPoint(pos)) {
+			gameLocal.endAction(this, 1);
+			return true;
+		} 
+
+		return false;
+	}
+
 	
 	// Dont add vertical bias when using fly move
 	if ( move.moveType == MOVETYPE_FLY ) {
@@ -1116,7 +1134,12 @@ bool idAI::MoveToEntity( idEntity *ent, float range ) {
 
 	
 	if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
-		return true;
+		if (ReachedPos(pos, MOVE_TO_ENTITY, range)) {
+			gameLocal.Printf("6\n");
+			StopMove(MOVE_STATUS_DONE);
+			return true;
+		}
+		return false;
 	}
 
 

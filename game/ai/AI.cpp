@@ -5165,3 +5165,7 @@ bool idAI::testTest(void) {
 	gameLocal.Printf("false\n");
 	return false;
 }
+
+void idAI::rangeAttackLaser(void) {
+	PerformAction(&actionRangedAttack, (checkAction_t)&idAI::CheckAction_RangedAttack, &actionTimerRangedAttack);
+}

@@ -1106,6 +1106,7 @@ public:
 	void                    SetTurn(bool change);
 	void					SpawnConvoy(void);
 	void                    selected(idEntity* ent, idVec3& pos);
+	void                    endAction(const idAI* ent, int Action);
 
 private:
 	char					clientGuids[ MAX_CLIENTS ][ CLIENT_GUID_LENGTH ];

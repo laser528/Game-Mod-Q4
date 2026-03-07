@@ -114,6 +114,8 @@ public:
 	int						entityNumber;			// index into the entity list
 	int						entityDefNumber;		// index into the entity def list
 
+	int						convoyPos = 0;          // Laser
+
 	idLinkList<idEntity>	spawnNode;				// for being linked into spawnedEntities list
 	idLinkList<idEntity>	activeNode;				// for being linked into activeEntities list
 

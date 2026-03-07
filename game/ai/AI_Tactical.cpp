@@ -375,6 +375,8 @@ bool rvAITactical::CheckActions ( void ) {
 
 	return false;
 }
+// Laser
+
 
 /*
 ================

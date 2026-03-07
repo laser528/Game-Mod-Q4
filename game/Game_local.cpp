@@ -7772,6 +7772,7 @@ idEntity* idGameLocal::HitScan(
 				if (owner && owner->IsType(idPlayer::GetClassType())) {
 					//gameLocal.SpawnConvoy();
 					//printf("Spawn Attempt");
+	
 					gameLocal.selected(ent, collisionPoint);
 					//gameLocal.Printf("hit: x: %f | y: %f | z: %f\n", collisionPoint.x, collisionPoint.y, collisionPoint.z);
 				}
@@ -8494,12 +8495,22 @@ static idEntity* Cmd_Spawn_f(const idCmdArgs& args, const idVec3& spawns) {
 #endif // !_MPBETA
 }
 
+//thread = new idThread(); // Laser thread info
+//// RAVEN BEGIN
+//// mwhitlock: Dynamic memory consolidation
+//RV_POP_HEAP();
+//// RAVEN END
+//thread->SetThreadName(name.c_str()); // LASER THREAD INFO
+//thread->CallFunction( const function_t *func, bool clearStack );
+//thread->DelayedStart(0);
 
 // STATE L
 int turn = 1;
 idEntity* convoy[5] = {};
 idEntity* selectedUnit = NULL;
 idEntity* pointerEntity = NULL; // marine head as anchor due to unrealiability of move to
+int convoyTurns[5][2];
+int convoyActions[5];
 bool init = false;
 
 const char unitCommands[10][133] = {
@@ -8524,7 +8535,7 @@ idVec3 spawns[5] = {
 	idVec3(9812.436523, -7013.122559, -5.711244),
 
 };
-const char pointerCommand[1][50] = {"spawn char_marinehead_helmet_medic"};
+const char pointerCommand[50] = "spawn char_marinehead_helmet_medic";
 
 bool idGameLocal::GetTurn() { 
 	return turn;
@@ -8538,9 +8549,19 @@ void idGameLocal::SpawnConvoy() {
 		args.TokenizeString(unitCommands[i], false);
 		convoy[i] = Cmd_Spawn_f(args, spawns[i]);
 
+		convoy[i]->convoyPos = i;
+
 		idAI* unitAI = static_cast<idAI*>(convoy[i]);
 		unitAI->unitTurn = 1;
 	}
+	for (int i = 0; i < 5; i++) {
+		convoyTurns[i][0] = 1;
+		convoyTurns[i][1] = 1;
+
+		convoyActions[i] = -1;
+
+	}
+
 	init = true;
 }
 
@@ -8549,18 +8570,27 @@ void idGameLocal::SetTurn(bool change) {
 }
 
 
+static void attack(idEntity* target, idAI* unitAi) {
+	gameLocal.Printf("ATTCK\n");
+	unitAi->canMakeActionLaser = true;
+	unitAi->FaceEntity(target);
+	unitAi->rangeAttackLaser();
+}
 
 
+//thread = new idThread(func); // Laser
+//thread->DelayedStart(0);
 
 void idGameLocal::selected(idEntity* ent, idVec3& pos) {
 	float acceptableRangeToTarget = 42;
 
-
-
+	if (!init) {
+		return;
+	}
 
 	if (selectedUnit == NULL && ent != NULL) { // Select Unit
 		for (int i = 0; i < 5; i++) {
-			if (convoy[i] == ent) {
+			if (convoy[i] == ent && convoyTurns[i][1]) {
 				gameLocal.Printf("Selected");
 				selectedUnit = ent;
 				return;
@@ -8569,31 +8599,78 @@ void idGameLocal::selected(idEntity* ent, idVec3& pos) {
 
 
 	} else if (selectedUnit != NULL && ent->IsType(idAI::GetClassType())) {// Move Unit to Ent
+		idAI* unitAI = static_cast<idAI*>(selectedUnit);
 
 		gameLocal.Printf("Move Ent\n");
+		if (!(convoyTurns[selectedUnit->convoyPos][1])) { // already moved and or attacked
+			return;
+		}
 
-		idAI* unitAI = static_cast<idAI*>(selectedUnit);
-		unitAI->canMakeActionLaser = true;
-		unitAI->MoveToEntity(ent, acceptableRangeToTarget);
+		if (convoyTurns[selectedUnit->convoyPos][0]) { // can Move
+			convoyTurns[selectedUnit->convoyPos][0] = false;
+			
+			unitAI->canMakeActionLaser = true;
+			unitAI->MoveToEntity(ent, acceptableRangeToTarget);
+
+			
+		}
+		convoyActions[selectedUnit->convoyPos] = ent->entityNumber;
+		convoyTurns[selectedUnit->convoyPos][1] = false;
 		selectedUnit = NULL;
 
 	} else if(selectedUnit != NULL && !ent->IsType(idAI::GetClassType())) { // Move Unit to pos
-		gameLocal.Printf("Move pos\n");
-
+		gameLocal.Printf("Move pos: %i\n", gameLocal.GetTime());
 		idCmdArgs args;
-		args.TokenizeString(pointerCommand[0], false);
+
+		if (!(convoyTurns[selectedUnit->convoyPos][0])) {
+			return;
+		}
+		convoyTurns[selectedUnit->convoyPos][0] = false;
+
+		gameLocal.Printf("gotTO: 1 \n");
+
+		args.TokenizeString(pointerCommand, false);
 		pointerEntity = Cmd_Spawn_f(args, pos);
 
 		idAI* unitAI = static_cast<idAI*>(selectedUnit);
 		unitAI->canMakeActionLaser = true;
 		unitAI->MoveToEntity(pointerEntity, acceptableRangeToTarget);
-	
+		gameLocal.Printf("gotTO: 2 \n");
 		// MoveToAttack( idEntity *ent, int attack_anim )
 		// MoveToEntity( idEntity *ent, float range )
 		// MoveTo ( const idVec3 &pos, float range )
 		// unitAI->FaceEntity(ent);
 		selectedUnit = NULL;
 	}
+
+}
+
+void idGameLocal::endAction(const idAI* ai, int Action) {
+	const idEntity* ent = static_cast<const idEntity*>(ai);
+
+	gameLocal.Printf("endAction: 1");
+
+	for (int i = 0; i < 5; i++) {
+		if ((ent->entityNumber) == (convoy[i]->entityNumber)) {
+			idAI* unitAI = static_cast<idAI*>(convoy[i]);
+			
+			gameLocal.Printf("endAction: 2");
+			unitAI->canMakeActionLaser = false;
+			unitAI->StopMove(MOVE_STATUS_DEST_NOT_FOUND);
+
+			if (convoyActions[ent->convoyPos] != -1) {
+				gameLocal.Printf("endAction: 3");
+				attack(entities[convoyActions[ent->convoyPos]], unitAI);
+				convoyActions[ent->convoyPos] = -1;
+			}
+			
+
+
+		}
+	}
+
+
+	//entityNumber
 
 }
 

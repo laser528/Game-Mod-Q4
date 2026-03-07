@@ -798,6 +798,11 @@ public:
 	const char *			ChooseAnim						( int channel, const char *animname );
 
 	//
+	// Laser 
+	void					rangeAttackLaser				( void );
+
+
+	//
 	// ai/ai_events.cpp
 	//
 public:

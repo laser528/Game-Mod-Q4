@@ -3842,12 +3842,12 @@ idThread *idEntity::ConstructScriptObject( void ) {
 // mwhitlock: Dynamic memory consolidation
 		RV_PUSH_HEAP_MEM(this);
 // RAVEN END
-		thread = new idThread();
+		thread = new idThread(); // Laser thread info
 // RAVEN BEGIN
 // mwhitlock: Dynamic memory consolidation
 		RV_POP_HEAP();
 // RAVEN END
-		thread->SetThreadName( name.c_str() );
+		thread->SetThreadName( name.c_str() ); // LASER THREAD INFO
 		thread->CallFunction( this, constructor, true );
 		thread->DelayedStart( 0 );
 	} else {
