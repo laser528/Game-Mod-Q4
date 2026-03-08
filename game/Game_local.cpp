@@ -8504,6 +8504,8 @@ struct stats {
 	int exp;
 	int level;         // Should never be zero 
 	int superClass;    // Determines if unit has achieved its super/Promoted class 
+	int maxHealth;
+	int baseHealth;
 };
 struct growthRates {
 	float overHealth;    
@@ -8557,9 +8559,9 @@ bool idGameLocal::GetTurn() {
 
 void idGameLocal::levelUp(int unit) {
 	if (random.RandomFloat() < unitGrowthRates[unit].overHealth) {
-		convoy[unit]->health += (convoy[unit]->health)*0.1;
-		
+		// convoy[unit]->health += (convoy[unit]->health)*0.1; Unit proably shouldnt gain hp from level up
 		unitStats[unit].overHealth += 1;
+		unitStats[unit].maxHealth += unitStats[unit].baseHealth*0.1;
 
 		// Update Health
 	}
@@ -8603,6 +8605,9 @@ void idGameLocal::SpawnConvoy() {
 		unitGrowthRates[i].tech = random.RandomFloat();
 		unitGrowthRates[i].shields = random.RandomFloat();
 
+		unitStats[i].maxHealth = unitAI->health;
+		unitStats[i].baseHealth = unitAI->health;
+
 		unitStats[i].level = random.RandomInt(3) + 1; // 1-4 Lvl
 		for (int i = 0; i < unitStats[i].level; i++) { // Level rewards
 			levelUp(i);
@@ -8624,9 +8629,18 @@ static void attack(idEntity* target, idAI* unitAi) {
 
 	for (int i = 0; i < 5; i++) {
 		if (convoy[i] != target) continue;
+		int totalHealing = 0;
 		switch (unitAi->convoyPos) {
 		case 1:
-
+			gameLocal.Printf("Heallyyyyy\n");
+			for (int i = 0; i < unitStats[unitAi->convoyPos].overHealth; i++) {
+				totalHealing += gameLocal.random.RandomInt(12) * (unitStats[unitAi->convoyPos].overHealth + 1);
+			}
+			if ((target->health + totalHealing) > unitStats[i].maxHealth) {
+				target->health = unitStats[i].maxHealth;
+				return;
+			}
+			target->health += totalHealing;
 			break;
 		case 4: // Technician / Dancer unit turn refresh
 			gameLocal.Printf("Techyyyy\n");
