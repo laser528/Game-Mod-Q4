@@ -151,7 +151,7 @@ rvAIMedic::Event_EnableHeal
 =====================
 */
 void rvAIMedic::Event_EnableHeal( void ) {
-	healDisabled = false;
+	healDisabled = true; // Laser changed to true 
 }
 
 /*
@@ -366,6 +366,9 @@ void rvAIMedic::SetHealValues( idPlayer* player )
 
 bool rvAIMedic::CheckTakePatient( idPlayer* player )
 {
+	if (true) {
+		return false; // LAser
+	}
 	if ( !player )
 	{
 		return false;
@@ -594,6 +597,9 @@ stateResult_t rvAIMedic::State_Medic ( const stateParms_t& parms ) {
 		STAGE_HEAL,			// Keep healing until no longer in melee range or they're fully healed
 		STAGE_WAIT_FINISH	// Finish anim
 	};	
+	if (true) {
+		return SRESULT_DONE; // Laser
+	}
 	if ( !patient || patient->health <= 0 || !SituationAllowsPatient() )
 	{//patient dead or situation is bad
 		//NOTE: if patient still alive and situation is just bad, maybe we shouldn't break out altogether, maybe pause and resume?

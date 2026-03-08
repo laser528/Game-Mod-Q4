@@ -315,6 +315,7 @@ bool idAI::CheckAction_MeleeAttack ( rvAIAction* action, int animNum ) {
 	if ( !CheckFOV ( enemy.ent->GetPhysics()->GetOrigin(), 10 ) ) {
 		return false;
 	}
+	gameLocal.checkTimeOut();
 	return true;
 }
 

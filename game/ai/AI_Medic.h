@@ -65,7 +65,7 @@ private:
 	int					healDebounceInterval;
 	int					healDebounceTime;
 
-	bool				healDisabled;
+	bool				healDisabled = true;
 	bool				wasAware;
 	bool				wasIgnoreEnemies;
 

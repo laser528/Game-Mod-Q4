@@ -1166,6 +1166,7 @@ bool idAI::MoveToEntity( idEntity *ent, float range ) {
 	if ( ReachedPos( pos, MOVE_TO_ENTITY, range ) ) {
 		gameLocal.Printf("6\n");
 		StopMove( MOVE_STATUS_DONE );
+		gameLocal.endAction(this, 1);
 		return true;
 	}
 	
