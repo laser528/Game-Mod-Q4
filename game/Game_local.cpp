@@ -8553,6 +8553,40 @@ idVec3 spawns[5] = {
 };
 const char pointerCommand[50] = "spawn char_marinehead_helmet_medic";
 
+
+
+void resetUnit(int i /*UNIT*/) {
+	convoyTurns[i][0] = 1;
+	convoyTurns[i][1] = 1;
+	convoyActions[i] = -1;
+	unitTurnAttacks[i] = 0;
+	attackTimeOuts[i] = 0;
+	movTimeOuts[i] = 0;
+}
+void endGame() {
+	if (turn) {
+		for (int i = 0; i < 5; i++) {
+			if (convoyTurns[i][0]) return;
+		}
+		turn = 0;
+	}
+
+	for (int i = 0; i < 5; i++) resetUnit(i);
+	turn = 1;
+}
+void forceEndGame() {
+	if (turn) {
+		for (int i = 0; i < 5; i++) {
+			convoyTurns[i][0] = 0;
+		}
+		turn = 0;
+		return;
+	}
+
+	for (int i = 0; i < 5; i++) resetUnit(i);
+	turn = 1;
+}
+
 bool idGameLocal::GetTurn() { 
 	return turn;
 }
@@ -8644,12 +8678,7 @@ static void attack(idEntity* target, idAI* unitAi) {
 			break;
 		case 4: // Technician / Dancer unit turn refresh
 			gameLocal.Printf("Techyyyy\n");
-			convoyTurns[i][0] = 1;
-			convoyTurns[i][1] = 1;
-			convoyActions[i] = -1;
-			unitTurnAttacks[i] = 0;
-			attackTimeOuts[i] = 0;
-			movTimeOuts[i] = 0;
+			resetUnit(i);
 			break;
 		}
 	}
@@ -8723,6 +8752,7 @@ void idGameLocal::selected(idEntity* ent, idVec3& pos) {
 			return;
 		}
 		convoyTurns[selectedUnit->convoyPos][0] = false;
+		convoyTurns[selectedUnit->convoyPos][1] = false;
 
 
 		args.TokenizeString(pointerCommand, false);
