@@ -7774,10 +7774,9 @@ idEntity* idGameLocal::HitScan(
 				if (owner && owner->IsType(idPlayer::GetClassType())) {
 					//gameLocal.SpawnConvoy();
 					//printf("Spawn Attempt");
-	
+				
 					gameLocal.selected(ent, collisionPoint);
-					GetLocalPlayer()->GetHud()->SetStateInt("player_health_unit_1", random.RandomInt(3));
-					GetLocalPlayer()->GetHud()->StateChanged(gameLocal.time);
+
 					//gameLocal.Printf("hit: x: %f | y: %f | z: %f\n", collisionPoint.x, collisionPoint.y, collisionPoint.z);
 				}
 				checkTimeOut();
@@ -8506,10 +8505,11 @@ struct stats {
 	int luck = 0;          // Increases chances of better stats 
 
 	int exp;
-	int level;         // Should never be zero 
-	int superClass;    // Determines if unit has achieved its super/Promoted class 
-	int maxHealth;
+	int level;            // Should never be zero 
+
+	int maxHealth;     // Hidden stats
 	int baseHealth;
+	int superClass;    // Determines if unit has achieved its super/Promoted class 
 };
 struct growthRates {
 	float overHealth;    
@@ -8547,6 +8547,29 @@ const char unitCommands[10][150] = {
 	"spawn char_marine_tech_armed   npc_name 'John Snow'   npc_description 'Class: Tactician'   team 0 def_head 'char_marinehead_helmet'",
 
 };
+const char statGuiPresets[6][50] = {
+	"OH: ",
+	"MOV: ",
+	"TEC: ",
+	"LCK: ",
+	"EXP: ",
+	"LVL: "
+};
+const char statGuiKeys[6][50] = {
+	"OverHealth_unit_",
+	"Move_unit_",
+	"Technique_unit_",
+	"Luck_unit_",
+	"Experience_unit_",
+	"Level_unit_"
+};
+#define OVER_HEALTH 0
+#define MOVE        1
+#define TECHNIQUE   2
+#define LUCK        3
+#define EXPERIENCE  4
+#define LEVEL       5
+
 idVec3 spawns[5] = {
 	idVec3(9766.247070, -7043.187012, -13.725734),
 	idVec3(10009.479492, -7119.711914, -28.155727),
@@ -8555,6 +8578,8 @@ idVec3 spawns[5] = {
 	idVec3(9812.436523, -7013.122559, -5.711244),
 
 };
+
+
 const char pointerCommand[50] = "spawn char_marinehead_helmet_medic";
 
 
@@ -8591,6 +8616,51 @@ void forceEndGame() {
 	turn = 1;
 }
 
+void updateStatsGui(int unit, int stat) {
+	char guiData[70];
+	char guiKey[70];
+	int statValue = 0;
+	int unitOffset = unit + 1; // AHHHHHHHHHHHHHHH I MADE EVERYTHING 1 +
+	char preset[11] = "%s%i";
+
+	sprintf(guiKey, preset, statGuiKeys[stat], unitOffset);
+	gameLocal.Printf("%s\n", guiKey);
+	switch (stat)
+	{
+	case 0:
+		statValue = unitStats[unit].overHealth;
+		break;
+	case 1:
+		statValue = unitStats[unit].mov;
+		break;
+	case 2:
+		statValue = unitStats[unit].tech;
+		break;
+	case 3:
+		statValue = unitStats[unit].luck;
+		return;
+		break;
+	case 4:
+		statValue = unitStats[unit].exp;
+		//strcpy(preset + 4, "/100");
+		break;
+	case 5:
+		statValue = unitStats[unit].level;
+		break;
+	default:
+		break;
+	}
+	gameLocal.Printf("%s\n", guiData);
+	sprintf(guiData, preset, statGuiPresets[stat], statValue);
+	gameLocal.GetLocalPlayer()->GetHud()->SetStateString(guiKey, guiData);
+	gameLocal.GetLocalPlayer()->GetHud()->StateChanged(gameLocal.time);
+}
+
+void updateAllStatsGui(int unit) {
+	for (int i = 0; i < 6; i++)
+		updateStatsGui(unit, i);
+}
+
 bool idGameLocal::GetTurn() { 
 	return turn;
 }
@@ -8600,19 +8670,23 @@ void idGameLocal::levelUp(int unit) {
 		// convoy[unit]->health += (convoy[unit]->health)*0.1; Unit proably shouldnt gain hp from level up
 		unitStats[unit].overHealth += 1;
 		unitStats[unit].maxHealth += unitStats[unit].baseHealth*0.1;
+		updateStatsGui(unit, OVER_HEALTH);
 
 		// Update Health
 	}
 	if (random.RandomFloat() < unitGrowthRates[unit].mov) {
 		unitStats[unit].mov += 1;
+		updateStatsGui(unit, MOVE);
 		// No Update
 	}
 	if (random.RandomFloat() < unitGrowthRates[unit].tech) {
 		unitStats[unit].tech += 1;
+		updateStatsGui(unit, TECHNIQUE);
 		// No Update
 	}
 	if (random.RandomFloat() < unitGrowthRates[unit].luck) {
 		unitStats[unit].luck += 1;
+		updateStatsGui(unit, LUCK);
 		// No Update
 	}
 
@@ -8647,13 +8721,12 @@ void idGameLocal::SpawnConvoy() {
 		unitStats[i].baseHealth = unitAI->health;
 
 		unitStats[i].level = random.RandomInt(3) + 1; // 1-4 Lvl
+		updateAllStatsGui(i);
 		for (int i = 0; i < unitStats[i].level; i++) { // Level rewards
 			levelUp(i);
 		}
 	}
 	//GetLocalPlayer()->GetHud()->SetStateInt("#str_124001", unitStats[0].overHealth);
-	GetLocalPlayer()->GetHud()->SetStateInt("player_health_unit_1", unitStats[0].overHealth);
-	GetLocalPlayer()->GetHud()->StateChanged(gameLocal.time);
 	init = true;
 }
 

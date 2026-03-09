@@ -2373,6 +2373,82 @@ windowDef Desktop
 	{
 		rect	-189,-116,640,480
 		visible	("gui::mp" == 0 )
+		windowDef statsMenu
+		{
+			rect	190,443,121,26
+			visible	1
+			background	"gfx\guis\hud\ctf_bgbar"
+			matcolor	0,0,0,0
+			backcolor	0.729,0.729,0.729,0.419
+			windowDef Border
+			{
+				rect	-4,2,132,24
+				visible	1
+				background	"gfx\guis\hud\wsbarglow"
+				matcolor	0,0.250,0,0.666
+				backcolor	0,0,0,0
+			}
+			windowDef p_overHealth_text
+			{
+				rect	-1,-3,88,28
+				visible	1
+				forecolor	1,1,1,1
+				text	"gui::OverHealth_unit_1"
+				gui	::
+				player_health	")"
+				player_health_unit_1	""
+				textscale	0.2
+				font	"fonts/marine"
+			}
+			windowDef p_move_text
+			{
+				rect	39,-1,88,28
+				visible	1
+				forecolor	1,1,1,1
+				text	"gui::Move_unit_1"
+				gui	::
+				player_health	")"
+				player_health_unit_1	""
+				textscale	0.2
+				font	"fonts/marine"
+			}
+			windowDef p_Technique_text
+			{
+				rect	0,14,88,28
+				visible	1
+				forecolor	1,1,1,1
+				text	"gui::Technique_unit_1 "
+				gui	::
+				player_health	")"
+				player_health_unit_1	""
+				textscale	0.2
+				font	"fonts/marine"
+			}
+			windowDef p_Level_text
+			{
+				rect	39,13,88,28
+				visible	1
+				forecolor	1,1,1,1
+				text	"gui::Level_unit_1"
+				gui	::
+				player_health	")"
+				player_health_unit_1	""
+				textscale	0.2
+				font	"fonts/marine"
+			}
+			windowDef p_Experience_text
+			{
+				rect	78,13,88,28
+				visible	1
+				forecolor	1,1,1,1
+				text	"gui::Experience_unit_1"
+				gui	::
+				player_health	")"
+				player_health_unit_1	""
+				textscale	0.2
+				font	"fonts/marine"
+			}
+		}
 		windowDef health_backbar
 		{
 			rect	190,420,125,33
@@ -2448,8 +2524,84 @@ windowDef Desktop
 	}
 	windowDef p_health_3
 	{
-		rect	-188,-282,640,480
+		rect	-187,-281,640,588
 		visible	("gui::mp" == 0 )
+		windowDef statsMenu
+		{
+			rect	196,464,121,26
+			visible	1
+			background	"gfx\guis\hud\ctf_bgbar"
+			matcolor	0,0,0,0
+			backcolor	0.729,0.729,0.729,0.419
+			windowDef Border
+			{
+				rect	-4,2,132,24
+				visible	1
+				background	"gfx\guis\hud\wsbarglow"
+				matcolor	0,0.250,0,0.666
+				backcolor	0,0,0,0
+			}
+			windowDef p_overHealth_text
+			{
+				rect	-1,-3,88,28
+				visible	1
+				forecolor	1,1,1,1
+				text	"gui::OverHealth_unit_3"
+				gui	::
+				player_health	")"
+				player_health_unit_1	""
+				textscale	0.2
+				font	"fonts/marine"
+			}
+			windowDef p_move_text
+			{
+				rect	39,-1,88,28
+				visible	1
+				forecolor	1,1,1,1
+				text	"gui::Move_unit_3"
+				gui	::
+				player_health	")"
+				player_health_unit_1	""
+				textscale	0.2
+				font	"fonts/marine"
+			}
+			windowDef p_Technique_text
+			{
+				rect	0,14,88,28
+				visible	1
+				forecolor	1,1,1,1
+				text	"gui::Technique_unit_3"
+				gui	::
+				player_health	")"
+				player_health_unit_1	""
+				textscale	0.2
+				font	"fonts/marine"
+			}
+			windowDef p_Level_text
+			{
+				rect	39,13,88,28
+				visible	1
+				forecolor	1,1,1,1
+				text	"gui::Level_unit_3"
+				gui	::
+				player_health	")"
+				player_health_unit_1	""
+				textscale	0.2
+				font	"fonts/marine"
+			}
+			windowDef p_Experience_text
+			{
+				rect	78,13,88,28
+				visible	1
+				forecolor	1,1,1,1
+				text	"gui::Experience_unit_3"
+				gui	::
+				player_health	")"
+				player_health_unit_1	""
+				textscale	0.2
+				font	"fonts/marine"
+			}
+		}
 		windowDef health_backbar
 		{
 			rect	193,440,125,32
@@ -2525,8 +2677,84 @@ windowDef Desktop
 	}
 	windowDef p_health_2
 	{
-		rect	-188,-193,640,480
+		rect	-187,-192,640,509
 		visible	("gui::mp" == 0 )
+		windowDef statsMenu
+		{
+			rect	191,445,121,26
+			visible	1
+			background	"gfx\guis\hud\ctf_bgbar"
+			matcolor	0,0,0,0
+			backcolor	0.729,0.729,0.729,0.419
+			windowDef Border
+			{
+				rect	-4,2,132,24
+				visible	1
+				background	"gfx\guis\hud\wsbarglow"
+				matcolor	0,0.250,0,0.666
+				backcolor	0,0,0,0
+			}
+			windowDef p_overHealth_text
+			{
+				rect	-1,-3,88,28
+				visible	1
+				forecolor	1,1,1,1
+				text	"gui::OverHealth_unit_2"
+				gui	::
+				player_health	")"
+				player_health_unit_1	""
+				textscale	0.2
+				font	"fonts/marine"
+			}
+			windowDef p_move_text
+			{
+				rect	39,-1,88,28
+				visible	1
+				forecolor	1,1,1,1
+				text	"gui::Move_unit_2"
+				gui	::
+				player_health	")"
+				player_health_unit_1	""
+				textscale	0.2
+				font	"fonts/marine"
+			}
+			windowDef p_Technique_text
+			{
+				rect	0,14,88,28
+				visible	1
+				forecolor	1,1,1,1
+				text	"gui::Technique_unit_2"
+				gui	::
+				player_health	")"
+				player_health_unit_1	""
+				textscale	0.2
+				font	"fonts/marine"
+			}
+			windowDef p_Level_text
+			{
+				rect	39,13,88,28
+				visible	1
+				forecolor	1,1,1,1
+				text	"gui::Level_unit_2"
+				gui	::
+				player_health	")"
+				player_health_unit_1	""
+				textscale	0.2
+				font	"fonts/marine"
+			}
+			windowDef p_Experience_text
+			{
+				rect	78,13,88,28
+				visible	1
+				forecolor	1,1,1,1
+				text	"gui::Experience_unit_2"
+				gui	::
+				player_health	")"
+				player_health_unit_1	""
+				textscale	0.2
+				font	"fonts/marine"
+			}
+		}
 		windowDef health_backbar
 		{
 			rect	190,420,125,32
@@ -2604,6 +2832,82 @@ windowDef Desktop
 	{
 		rect	-186,-208,640,480
 		visible	("gui::mp" == 0 )
+		windowDef statsMenu
+		{
+			rect	192,313,121,26
+			visible	1
+			background	"gfx\guis\hud\ctf_bgbar"
+			matcolor	0,0,0,0
+			backcolor	0.729,0.729,0.729,0.419
+			windowDef Border
+			{
+				rect	-4,2,132,24
+				visible	1
+				background	"gfx\guis\hud\wsbarglow"
+				matcolor	0,0.250,0,0.666
+				backcolor	0,0,0,0
+			}
+			windowDef p_overHealth_text
+			{
+				rect	-1,-3,88,28
+				visible	1
+				forecolor	1,1,1,1
+				text	"gui::OverHealth_unit_4"
+				gui	::
+				player_health	")"
+				player_health_unit_1	""
+				textscale	0.2
+				font	"fonts/marine"
+			}
+			windowDef p_move_text
+			{
+				rect	39,-1,88,28
+				visible	1
+				forecolor	1,1,1,1
+				text	"gui::Move_unit_4"
+				gui	::
+				player_health	")"
+				player_health_unit_1	""
+				textscale	0.2
+				font	"fonts/marine"
+			}
+			windowDef p_Technique_text
+			{
+				rect	0,14,88,28
+				visible	1
+				forecolor	1,1,1,1
+				text	"gui::Technique_unit_4"
+				gui	::
+				player_health	")"
+				player_health_unit_1	""
+				textscale	0.2
+				font	"fonts/marine"
+			}
+			windowDef p_Level_text
+			{
+				rect	39,13,88,28
+				visible	1
+				forecolor	1,1,1,1
+				text	"gui::Level_unit_4"
+				gui	::
+				player_health	")"
+				player_health_unit_1	""
+				textscale	0.2
+				font	"fonts/marine"
+			}
+			windowDef p_Experience_text
+			{
+				rect	78,13,88,28
+				visible	1
+				forecolor	1,1,1,1
+				text	"gui::Experience_unit_4"
+				gui	::
+				player_health	")"
+				player_health_unit_1	""
+				textscale	0.2
+				font	"fonts/marine"
+			}
+		}
 		windowDef health_backbar
 		{
 			rect	192,289,125,32
@@ -2681,6 +2985,82 @@ windowDef Desktop
 	{
 		rect	-191,-218,640,480
 		visible	("gui::mp" == 0 )
+		windowDef statsMenu
+		{
+			rect	198,254,121,26
+			visible	1
+			background	"gfx\guis\hud\ctf_bgbar"
+			matcolor	0,0,0,0
+			backcolor	0.729,0.729,0.729,0.419
+			windowDef Border
+			{
+				rect	-5,2,132,24
+				visible	1
+				background	"gfx\guis\hud\wsbarglow"
+				matcolor	0,0.250,0,0.666
+				backcolor	0,0,0,0
+			}
+			windowDef p_overHealth_text
+			{
+				rect	-2,-4,88,28
+				visible	1
+				forecolor	1,1,1,1
+				text	"gui::OverHealth_unit_5"
+				gui	::
+				player_health	")"
+				player_health_unit_1	""
+				textscale	0.2
+				font	"fonts/marine"
+			}
+			windowDef p_move_text
+			{
+				rect	39,-2,88,28
+				visible	1
+				forecolor	1,1,1,1
+				text	"gui::Move_unit_5"
+				gui	::
+				player_health	")"
+				player_health_unit_1	""
+				textscale	0.2
+				font	"fonts/marine"
+			}
+			windowDef p_Technique_text
+			{
+				rect	-1,14,88,28
+				visible	1
+				forecolor	1,1,1,1
+				text	"gui::Technique_unit_5 "
+				gui	::
+				player_health	")"
+				player_health_unit_1	""
+				textscale	0.2
+				font	"fonts/marine"
+			}
+			windowDef p_Level_text
+			{
+				rect	39,13,88,28
+				visible	1
+				forecolor	1,1,1,1
+				text	"gui::Level_unit_5"
+				gui	::
+				player_health	")"
+				player_health_unit_1	""
+				textscale	0.2
+				font	"fonts/marine"
+			}
+			windowDef p_Experience_text
+			{
+				rect	78,13,88,28
+				visible	1
+				forecolor	1,1,1,1
+				text	"gui::Experience_unit_5"
+				gui	::
+				player_health	")"
+				player_health_unit_1	""
+				textscale	0.2
+				font	"fonts/marine"
+			}
+		}
 		windowDef health_backbar
 		{
 			rect	197,229,125,32
@@ -2752,23 +3132,6 @@ windowDef Desktop
 			background	"gfx/guis/hud/backbar_add"
 			matcolor	1*guitable_10_5[time*0.002],0,0,1
 			shear	0,-.22
-		}
-		windowDef statsMenu
-		{
-			rect	196,256,121,26
-			visible	1
-			background	"gfx\guis\hud\ctf_bgbar"
-			matcolor	0,0,0,0
-			backcolor	0.749,0.749,0.749,1
-			windowDef p_overHealth_text
-			{
-				rect	-2,-4,88,28
-				visible	1
-				forecolor	0,0,0,1
-				text	"gui::player_health_unit_1"
-				textscale	0.2
-				font	"fonts/marine"
-			}
 		}
 	}
 }
