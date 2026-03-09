@@ -222,7 +222,8 @@ rvGameDebug::Set
 void rvGameDebug::SetInt ( const char* key, int value ) {
 	if ( inFrame ) {
 		if ( currentHud ) {
-			currentHud->SetStateInt( key, value );
+			gameLocal.Printf("Key: %s | Value: %i\n", key, value);
+			currentHud->SetStateInt( key, value ); // LASER 
 		}
 	} else  {
 		nonGameState.SetInt ( key, value );
@@ -232,6 +233,7 @@ void rvGameDebug::SetInt ( const char* key, int value ) {
 void rvGameDebug::SetFloat ( const char* key, float value ) {
 	if ( inFrame ) {
 		if ( currentHud ) {
+			gameLocal.Printf("Key: %s | Value: %f\n", key, value);
 			currentHud->SetStateFloat( key, value );
 		}
 	} else {
@@ -242,6 +244,7 @@ void rvGameDebug::SetFloat ( const char* key, float value ) {
 void rvGameDebug::SetString ( const char* key, const char* value ) {
 	if ( inFrame )	{
 		if ( currentHud ) {
+			gameLocal.Printf("Key: %s | Value: %s\n", key, value);
 			currentHud->SetStateString( key, value );
 		}
 	} else {

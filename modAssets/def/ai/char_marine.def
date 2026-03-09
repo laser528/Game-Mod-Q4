@@ -2330,7 +2330,7 @@ entityDef ai_tactical
 
 	// --------------------------------- Combat ----------------------------------
 	"ammo"										"40"
-	"weaponPrefix"								"machinegun"
+	"weaponPrefix"								"rocketlauncher"
 	"minShots"									"5"	
 	"maxShots"									"10"
 	"painThreshold"								"1"

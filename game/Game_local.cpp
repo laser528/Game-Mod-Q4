@@ -7768,12 +7768,16 @@ idEntity* idGameLocal::HitScan(
 				// ===================================================
 				// LASER BRANCH LASER BRANCH LASER BRANCH LASER BRANCH
 				// ===================================================
-
+			/*	player->GuiActive() IMPORTANT LASER IMPORTANT
+					player->GuiActive()
+					player->GuiActive()*/
 				if (owner && owner->IsType(idPlayer::GetClassType())) {
 					//gameLocal.SpawnConvoy();
 					//printf("Spawn Attempt");
 	
 					gameLocal.selected(ent, collisionPoint);
+					GetLocalPlayer()->GetHud()->SetStateInt("player_health_unit_1", random.RandomInt(3));
+					GetLocalPlayer()->GetHud()->StateChanged(gameLocal.time);
 					//gameLocal.Printf("hit: x: %f | y: %f | z: %f\n", collisionPoint.x, collisionPoint.y, collisionPoint.z);
 				}
 				checkTimeOut();
@@ -8499,7 +8503,7 @@ struct stats {
 	int overHealth = 0;    // 10% Base health + base Health
 	int mov = 1;           // Move range modifier???? idunno
 	int tech = 1;		   // Extra consecutive attacks 
-	int shields = 0;       // Shields negate dmg taken for a turn 
+	int luck = 0;          // Increases chances of better stats 
 
 	int exp;
 	int level;         // Should never be zero 
@@ -8511,7 +8515,7 @@ struct growthRates {
 	float overHealth;    
 	float mov;           
 	float tech;		    
-	float shields;       
+	float luck;       
 };
 
 // STATE L
@@ -8607,8 +8611,8 @@ void idGameLocal::levelUp(int unit) {
 		unitStats[unit].tech += 1;
 		// No Update
 	}
-	if (random.RandomFloat() < unitGrowthRates[unit].shields) {
-		unitStats[unit].shields += 1;
+	if (random.RandomFloat() < unitGrowthRates[unit].luck) {
+		unitStats[unit].luck += 1;
 		// No Update
 	}
 
@@ -8637,7 +8641,7 @@ void idGameLocal::SpawnConvoy() {
 		unitGrowthRates[i].overHealth = random.RandomFloat();
 		unitGrowthRates[i].mov = random.RandomFloat();
 		unitGrowthRates[i].tech = random.RandomFloat();
-		unitGrowthRates[i].shields = random.RandomFloat();
+		unitGrowthRates[i].luck = random.RandomFloat();
 
 		unitStats[i].maxHealth = unitAI->health;
 		unitStats[i].baseHealth = unitAI->health;
@@ -8647,8 +8651,9 @@ void idGameLocal::SpawnConvoy() {
 			levelUp(i);
 		}
 	}
-	
-
+	//GetLocalPlayer()->GetHud()->SetStateInt("#str_124001", unitStats[0].overHealth);
+	GetLocalPlayer()->GetHud()->SetStateInt("player_health_unit_1", unitStats[0].overHealth);
+	GetLocalPlayer()->GetHud()->StateChanged(gameLocal.time);
 	init = true;
 }
 
@@ -8690,6 +8695,10 @@ static void attack(idEntity* target, idAI* unitAi) {
 
 //thread = new idThread(func); // Laser
 //thread->DelayedStart(0);
+
+// currentHud->SetStateInt( key, value ); IMPORTNAT
+// #str_124001
+// p_overHealth_text
 
 
 
