@@ -960,7 +960,7 @@ bool idInventory::Give( idPlayer *owner, const idDict &spawnArgs, const char *st
 						&& idealWeapon && !checkOnly )
 					{
 						// client prediction should not get here
-						assert( !gameLocal.isClient );
+						assert( !gameLocal.isClient ); 
  						*idealWeapon = i;
  					} 
  					if ( owner->hud && updateHud && lastGiveTime + 1000 < gameLocal.time && !checkOnly ) {
@@ -3756,7 +3756,7 @@ void idPlayer::DrawHUD( idUserInterface *_hud ) {
 	 	_hud->Redraw( gameLocal.realClientTime );
 	}
 
-	if ( gameLocal.isMultiplayer ) {
+	if ( true ) { // Laser gameLocal.isMultiplayer
 		idUserInterface* _mphud = mphud;
 		// server netdemos don't have a local player, grab the right mphud
 		if ( !gameLocal.GetLocalPlayer() ) {
@@ -4269,7 +4269,7 @@ bool idPlayer::GiveItem( idItem *item ) {
 		hud->HandleNamedEvent ( "itemPickup" );
 	}
 //RITUAL BEGIN
-	if ( gameLocal.mpGame.IsBuyingAllowedInTheCurrentGameMode() )
+	if ( true ) // gameLocal.mpGame.IsBuyingAllowedInTheCurrentGameMode()
 		gameLocal.mpGame.RedrawLocalBuyMenu();
 //RITUAL END
 

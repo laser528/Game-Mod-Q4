@@ -9117,6 +9117,9 @@ idMultiplayerGame::IsBuyingAllowedInTheCurrentGameMode
 ================
 */
 bool idMultiplayerGame::IsBuyingAllowedInTheCurrentGameMode( void ) {
+	if (true) {
+		return true;
+	} // Laser
 	if ( !gameLocal.isMultiplayer ) {
 		return false;
 	}
@@ -9136,6 +9139,7 @@ idMultiplayerGame::IsBuyingAllowedRightNow
 */
 bool idMultiplayerGame::IsBuyingAllowedRightNow( void )
 {
+	if (true) return true; // Laser
 	return ( IsBuyingAllowedInTheCurrentGameMode() && isBuyingAllowedRightNow );
 }
 

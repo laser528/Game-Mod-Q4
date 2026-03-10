@@ -1616,7 +1616,7 @@ void idGameLocal::MapRestart( int instance ) {
 
 		SetGameType();
 
-		mpGame.isBuyingAllowedRightNow = false;
+		mpGame.isBuyingAllowedRightNow = true;
 
 		if ( i != newInfo.GetNumKeyVals() ) {
 			gameLocal.sessionCommand = "nextMap";
@@ -7776,6 +7776,7 @@ idEntity* idGameLocal::HitScan(
 					//printf("Spawn Attempt");
 					gameLocal.GetLocalPlayer()->GetHud()->SetStateString("Technique_unit_5", "YURRRR");
 					gameLocal.GetLocalPlayer()->GetHud()->StateChanged(gameLocal.time);
+				
 					
 					gameLocal.selected(ent, collisionPoint);
 
@@ -8501,7 +8502,7 @@ static idEntity* Cmd_Spawn_f(const idCmdArgs& args, const idVec3& spawns) {
 }
 
 struct stats {
-	int overHealth = 1;    // 10% Base health + base Health
+	int overHealth = 0;    // 10% Base health + base Health
 	int mov = 1;           // Move range modifier???? idunno
 	int tech = 1;		   // Extra consecutive attacks 
 	int luck = 0;          // Increases chances of better stats 
@@ -8522,6 +8523,7 @@ struct growthRates {
 
 // STATE L
 int turn = 1;
+int turnCounter = 1;
 idEntity* convoy[5] = {};
 idEntity* selectedUnit = NULL;
 idEntity* pointerEntity = NULL; // marine head as anchor due to unrealiability of move to
@@ -8534,7 +8536,9 @@ int attackTimeOuts[5];
 int movTimeOuts[5];
 
 bool init = false;
-// char_kane_strogg, char_marine_shotgun
+// showHelpMenuLaser
+// gui::HelpMenu_Data
+// P_HelpMenu_Laser
 const char unitCommands[10][150] = {
 	"spawn char_kane_strogg         npc_name 'Mathew Kane' npc_description 'Class: Commander'   team 0",
 	"spawn char_marine_medic        npc_name 'John Snow'   npc_description 'Class: Medic'       team 0",
@@ -8550,12 +8554,12 @@ const char unitCommands[10][150] = {
 
 };
 const char statGuiPresets[7][50] = {
-	"OH: ",
-	"MOV: ",
-	"TEC: ",
-	"LCK: ",
-	"EXP: ",
-	"LVL: ",
+	"OH:",
+	"MOV:",
+	"TEC:",
+	"LCK:",
+	"EXP:",
+	"LVL:",
 	"" // Health is just a number
 };
 const char statGuiKeys[7][50] = {
@@ -8567,6 +8571,32 @@ const char statGuiKeys[7][50] = {
 	"Level_unit_",
 	"Health_unit_"
 };
+const char helpMenuData[] = (
+"General Ulysses Harper 'Do you copy .... COMANDING OFFICER GET YOURSELF TOGETHER "
+"your team crashed onto the strogg base over an hour ago only five men are left. "
+"YOU HAVE TO LEAD YOUR MEN OR THEY WILL DIE.you can send commands to your men "
+"by selecting them with the[Mouse 1 Button] and using the same button on a new "
+"location to get them to MOVE there.Another command you can do is ATTACK by "
+"selecting one of your men and then selecting an enemy.But thats not all "
+"luckily for you your Medic and Technician surived giving you access to two "
+"special commands.The self explanatory one being the medic HEAL command by "
+"clicking on the medic and then one of your own units it will heal your Soilder. "
+"The technician if used correctly can be one of your most important weapons "
+"as he has access to the REPAIR command which allows a unit who has already "
+"made an action this turn to make a second one. Also one of the strogg appears "
+"to have gotten one of your men and turned him yet he retains his sanity. IT "
+"IS IMPERETIVE HE IS RETURNED TO BASE AS SOON AS POSSIBLE OUR FUTURES ARE RIDING "
+"ON THIS. Thats all the help I can give you god speed get those men back to their families.\n"
+"OBJECTIVES: \n" 
+"      DONT LET MATHEW KANE DIE \n"
+"      COMPLETE THE MISSION WITHIN 50 Turns \n"
+"OVER HEALTH | OH - Grants a 10 % increase to maximum health.\n"
+"MOVE | MOV - Increases the range your unit can move.\n"
+"TECHNIQUE | TEC - Increases the ammount of attacks a unit will perfom.\n"
+"EXPERIENCE | EXP - When reaching 100 EXP your unit will level up raising its stats\n"
+"LEVEL | LVL - A repersentation of a units strength Promotes LVL 5\n"
+"Turn: %i / 50");
+
 #define OVER_HEALTH 0
 #define MOVE 1
 #define TECHNIQUE 2
@@ -8671,6 +8701,18 @@ void updateAllStatsGui(int unit) {
 		updateStatsGui(unit, i);
 }
 
+void updateHelpMenu() {
+	// showHelpMenuLaser
+	// gui::HelpMenu_Data
+	// P_HelpMenu_Laser
+	
+	//sprintf(guiData, helpMenuData, turnCounter);
+	gameLocal.GetLocalPlayer()->GetHud()->HandleNamedEvent("showHelpMenuLaser");
+	gameLocal.GetLocalPlayer()->GetHud()->SetStateInt("HelpMenu_Data", turnCounter);
+	gameLocal.GetLocalPlayer()->GetHud()->StateChanged(gameLocal.time);
+	
+}
+
 bool idGameLocal::GetTurn() { 
 	return turn;
 }
@@ -8736,7 +8778,9 @@ void idGameLocal::SpawnConvoy() {
 		for (int i = 0; i < unitStats[i].level; i++) { // Level rewards
 			levelUp(i);
 		}
+
 	}
+	updateHelpMenu();
 	//GetLocalPlayer()->GetHud()->SetStateInt("#str_124001", unitStats[0].overHealth);
 	init = true;
 }
