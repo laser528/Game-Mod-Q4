@@ -7774,7 +7774,9 @@ idEntity* idGameLocal::HitScan(
 				if (owner && owner->IsType(idPlayer::GetClassType())) {
 					//gameLocal.SpawnConvoy();
 					//printf("Spawn Attempt");
-				
+					gameLocal.GetLocalPlayer()->GetHud()->SetStateString("Technique_unit_5", "YURRRR");
+					gameLocal.GetLocalPlayer()->GetHud()->StateChanged(gameLocal.time);
+					
 					gameLocal.selected(ent, collisionPoint);
 
 					//gameLocal.Printf("hit: x: %f | y: %f | z: %f\n", collisionPoint.x, collisionPoint.y, collisionPoint.z);
@@ -8499,7 +8501,7 @@ static idEntity* Cmd_Spawn_f(const idCmdArgs& args, const idVec3& spawns) {
 }
 
 struct stats {
-	int overHealth = 0;    // 10% Base health + base Health
+	int overHealth = 1;    // 10% Base health + base Health
 	int mov = 1;           // Move range modifier???? idunno
 	int tech = 1;		   // Extra consecutive attacks 
 	int luck = 0;          // Increases chances of better stats 
@@ -8547,28 +8549,31 @@ const char unitCommands[10][150] = {
 	"spawn char_marine_tech_armed   npc_name 'John Snow'   npc_description 'Class: Tactician'   team 0 def_head 'char_marinehead_helmet'",
 
 };
-const char statGuiPresets[6][50] = {
+const char statGuiPresets[7][50] = {
 	"OH: ",
 	"MOV: ",
 	"TEC: ",
 	"LCK: ",
 	"EXP: ",
-	"LVL: "
+	"LVL: ",
+	"" // Health is just a number
 };
-const char statGuiKeys[6][50] = {
+const char statGuiKeys[7][50] = {
 	"OverHealth_unit_",
 	"Move_unit_",
 	"Technique_unit_",
 	"Luck_unit_",
 	"Experience_unit_",
-	"Level_unit_"
+	"Level_unit_",
+	"Health_unit_"
 };
 #define OVER_HEALTH 0
-#define MOVE        1
-#define TECHNIQUE   2
-#define LUCK        3
-#define EXPERIENCE  4
-#define LEVEL       5
+#define MOVE 1
+#define TECHNIQUE 2
+#define LUCK 3
+#define EXPERIENCE 4
+#define LEVEL 5
+#define HEALTH 6
 
 idVec3 spawns[5] = {
 	idVec3(9766.247070, -7043.187012, -13.725734),
@@ -8624,7 +8629,6 @@ void updateStatsGui(int unit, int stat) {
 	char preset[11] = "%s%i";
 
 	sprintf(guiKey, preset, statGuiKeys[stat], unitOffset);
-	gameLocal.Printf("%s\n", guiKey);
 	switch (stat)
 	{
 	case 0:
@@ -8638,7 +8642,6 @@ void updateStatsGui(int unit, int stat) {
 		break;
 	case 3:
 		statValue = unitStats[unit].luck;
-		return;
 		break;
 	case 4:
 		statValue = unitStats[unit].exp;
@@ -8647,17 +8650,24 @@ void updateStatsGui(int unit, int stat) {
 	case 5:
 		statValue = unitStats[unit].level;
 		break;
+	case 6:
+		statValue = convoy[unit]->health;
+		sprintf(guiData, "%s%i/%i", statGuiPresets[stat], statValue, unitStats[unit].maxHealth);
+		gameLocal.GetLocalPlayer()->GetHud()->SetStateString(guiKey, guiData);
+		gameLocal.GetLocalPlayer()->GetHud()->StateChanged(gameLocal.time);
+		
+		return;
 	default:
 		break;
 	}
-	gameLocal.Printf("%s\n", guiData);
+	
 	sprintf(guiData, preset, statGuiPresets[stat], statValue);
 	gameLocal.GetLocalPlayer()->GetHud()->SetStateString(guiKey, guiData);
 	gameLocal.GetLocalPlayer()->GetHud()->StateChanged(gameLocal.time);
 }
 
 void updateAllStatsGui(int unit) {
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 7; i++)
 		updateStatsGui(unit, i);
 }
 
@@ -8671,6 +8681,7 @@ void idGameLocal::levelUp(int unit) {
 		unitStats[unit].overHealth += 1;
 		unitStats[unit].maxHealth += unitStats[unit].baseHealth*0.1;
 		updateStatsGui(unit, OVER_HEALTH);
+		updateStatsGui(unit, HEALTH);
 
 		// Update Health
 	}

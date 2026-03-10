@@ -2369,159 +2369,6 @@ windowDef Desktop
 		}
 
 	}
-	windowDef p_health_1
-	{
-		rect	-189,-116,640,480
-		visible	("gui::mp" == 0 )
-		windowDef statsMenu
-		{
-			rect	190,443,121,26
-			visible	1
-			background	"gfx\guis\hud\ctf_bgbar"
-			matcolor	0,0,0,0
-			backcolor	0.729,0.729,0.729,0.419
-			windowDef Border
-			{
-				rect	-4,2,132,24
-				visible	1
-				background	"gfx\guis\hud\wsbarglow"
-				matcolor	0,0.250,0,0.666
-				backcolor	0,0,0,0
-			}
-			windowDef p_overHealth_text
-			{
-				rect	-1,-3,88,28
-				visible	1
-				forecolor	1,1,1,1
-				text	"gui::OverHealth_unit_1"
-				gui	::
-				player_health	")"
-				player_health_unit_1	""
-				textscale	0.2
-				font	"fonts/marine"
-			}
-			windowDef p_move_text
-			{
-				rect	39,-1,88,28
-				visible	1
-				forecolor	1,1,1,1
-				text	"gui::Move_unit_1"
-				gui	::
-				player_health	")"
-				player_health_unit_1	""
-				textscale	0.2
-				font	"fonts/marine"
-			}
-			windowDef p_Technique_text
-			{
-				rect	0,14,88,28
-				visible	1
-				forecolor	1,1,1,1
-				text	"gui::Technique_unit_1 "
-				gui	::
-				player_health	")"
-				player_health_unit_1	""
-				textscale	0.2
-				font	"fonts/marine"
-			}
-			windowDef p_Level_text
-			{
-				rect	39,13,88,28
-				visible	1
-				forecolor	1,1,1,1
-				text	"gui::Level_unit_1"
-				gui	::
-				player_health	")"
-				player_health_unit_1	""
-				textscale	0.2
-				font	"fonts/marine"
-			}
-			windowDef p_Experience_text
-			{
-				rect	78,13,88,28
-				visible	1
-				forecolor	1,1,1,1
-				text	"gui::Experience_unit_1"
-				gui	::
-				player_health	")"
-				player_health_unit_1	""
-				textscale	0.2
-				font	"fonts/marine"
-			}
-		}
-		windowDef health_backbar
-		{
-			rect	190,420,125,33
-			visible	1
-			background	"gfx/guis/hud/backbar"
-			matcolor	0,0,0,0.5
-			shear	0,-.22
-		}
-		windowDef health_valbar
-		{
-			rect	190,420,125,30
-			visible	1
-			background	"gfx/guis/hud/valbar"
-			matcolor	0.701,0.815,0.431,0.2
-			shear	0,-.22
-		}
-		windowDef health_ekg
-		{
-			rect	190,421,125,26
-			visible	1
-			background	"gfx/guis/hud/ekg"
-			matcolor	0.0862,0.105,0.0549,1
-			shear	0,-.22
-		}
-		windowDef p_health_val
-		{
-			rect	310,420,115,59
-			visible	1
-			shear	0,-.22
-			windowDef health_val
-			{
-				rect	-118,1,125,26
-				visible	1
-				background	"gfx/guis/hud/valbar"
-				matcolor	0.701,0.815,0.431,0.35
-				shear	0,-.22
-			}
-		}
-		windowDef d_health_amount
-		{
-			rect	274,427,38,19
-			visible	0
-		}
-		windowDef health_amount
-		{
-			rect	256,429,52,26
-			visible	1
-			forecolor	0.866,0.921,0.764,1
-			text	"gui::player_health"
-			textscale	0.5
-			font	"fonts/chain"
-			shear	0,-.22
-			textalign	2
-			notime	1
-
-			onTime 0 {
-				transition "forecolor" "$desktop::white" "$desktop::typecolor" "250" ;
-				transition "rect" "$d_health_amount::rect" "$health_amount::rect" "250" ;
-				transition "textscale" "0.6" "0.5" "250" ;
-				
-				transition "icon_health::matcolor" "$desktop::white" "$desktop::healthicon" "250" ;
-			}
-
-		}
-		windowDef health_backbar_add
-		{
-			rect	190,420,125,28
-			visible	0
-			background	"gfx/guis/hud/backbar_add"
-			matcolor	1*guitable_10_5[time*0.002],0,0,1
-			shear	0,-.22
-		}
-	}
 	windowDef p_health_3
 	{
 		rect	-187,-281,640,588
@@ -2647,11 +2494,11 @@ windowDef Desktop
 		}
 		windowDef health_amount
 		{
-			rect	259,449,52,26
+			rect	248,444,65,17
 			visible	1
 			forecolor	0.866,0.921,0.764,1
-			text	"gui::player_health"
-			textscale	0.5
+			text	"gui::Health_unit_3"
+			textscale	0.25
 			font	"fonts/chain"
 			shear	0,-.22
 			textalign	2
@@ -2800,11 +2647,11 @@ windowDef Desktop
 		}
 		windowDef health_amount
 		{
-			rect	256,429,52,26
+			rect	241,424,71,18
 			visible	1
 			forecolor	0.866,0.921,0.764,1
-			text	"gui::player_health"
-			textscale	0.5
+			text	"gui::Health_unit_2"
+			textscale	0.25
 			font	"fonts/chain"
 			shear	0,-.22
 			textalign	2
@@ -2948,16 +2795,16 @@ windowDef Desktop
 		}
 		windowDef d_health_amount
 		{
-			rect	256,296,58,31
+			rect	276,293,39,15
 			visible	0
 		}
 		windowDef health_amount
 		{
-			rect	258,298,52,26
+			rect	249,296,61,15
 			visible	1
 			forecolor	0.866,0.921,0.764,1
-			text	"gui::player_health"
-			textscale	0.5
+			text	"gui::Health_unit_4"
+			textscale	0.25
 			font	"fonts/chain"
 			shear	0,-.22
 			textalign	2
@@ -2981,20 +2828,20 @@ windowDef Desktop
 			shear	0,-.22
 		}
 	}
-	windowDef p_health_5
+	windowDef p_health_1
 	{
-		rect	-191,-218,640,480
+		rect	-185,-120,640,509
 		visible	("gui::mp" == 0 )
 		windowDef statsMenu
 		{
-			rect	198,254,121,26
+			rect	191,445,121,26
 			visible	1
 			background	"gfx\guis\hud\ctf_bgbar"
 			matcolor	0,0,0,0
 			backcolor	0.729,0.729,0.729,0.419
 			windowDef Border
 			{
-				rect	-5,2,132,24
+				rect	-3,2,132,24
 				visible	1
 				background	"gfx\guis\hud\wsbarglow"
 				matcolor	0,0.250,0,0.666
@@ -3002,7 +2849,160 @@ windowDef Desktop
 			}
 			windowDef p_overHealth_text
 			{
-				rect	-2,-4,88,28
+				rect	0,-2,88,28
+				visible	1
+				forecolor	1,1,1,1
+				text	"gui::OverHealth_unit_1"
+				gui	::
+				player_health	")"
+				player_health_unit_1	""
+				textscale	0.2
+				font	"fonts/marine"
+			}
+			windowDef p_move_text
+			{
+				rect	39,0,88,28
+				visible	1
+				forecolor	1,1,1,1
+				text	"gui::Move_unit_1"
+				gui	::
+				player_health	")"
+				player_health_unit_1	""
+				textscale	0.2
+				font	"fonts/marine"
+			}
+			windowDef p_Technique_text
+			{
+				rect	0,14,88,28
+				visible	1
+				forecolor	1,1,1,1
+				text	"gui::Technique_unit_1"
+				gui	::
+				player_health	")"
+				player_health_unit_1	""
+				textscale	0.2
+				font	"fonts/marine"
+			}
+			windowDef p_Level_text
+			{
+				rect	39,13,88,28
+				visible	1
+				forecolor	1,1,1,1
+				text	"gui::Level_unit_1"
+				gui	::
+				player_health	")"
+				player_health_unit_1	""
+				textscale	0.2
+				font	"fonts/marine"
+			}
+			windowDef p_Experience_text
+			{
+				rect	78,13,88,28
+				visible	1
+				forecolor	1,1,1,1
+				text	"gui::Experience_unit_1"
+				gui	::
+				player_health	")"
+				player_health_unit_1	""
+				textscale	0.2
+				font	"fonts/marine"
+			}
+		}
+		windowDef health_backbar
+		{
+			rect	190,420,125,32
+			visible	1
+			background	"gfx/guis/hud/backbar"
+			matcolor	0,0,0,0.5
+			shear	0,-.22
+		}
+		windowDef health_valbar
+		{
+			rect	190,420,125,29
+			visible	1
+			background	"gfx/guis/hud/valbar"
+			matcolor	0.701,0.815,0.431,0.2
+			shear	0,-.22
+		}
+		windowDef health_ekg
+		{
+			rect	190,420,125,25
+			visible	1
+			background	"gfx/guis/hud/ekg"
+			matcolor	0.0862,0.105,0.0549,1
+			shear	0,-.22
+		}
+		windowDef p_health_val2
+		{
+			rect	310,420,115,59
+			visible	1
+			shear	0,-.22
+			windowDef health_val
+			{
+				rect	-117,0,125,25
+				visible	1
+				background	"gfx/guis/hud/valbar"
+				matcolor	0.701,0.815,0.431,0.35
+				shear	0,-.22
+			}
+		}
+		windowDef d_health_amount
+		{
+			rect	254,427,58,31
+			visible	0
+		}
+		windowDef health_amount
+		{
+			rect	244,424,66,17
+			visible	1
+			forecolor	0.858,0.913,0.756,1
+			text	"gui::Health_unit_1"
+			textscale	0.25
+			font	"fonts/chain"
+			shear	0,-.22
+			textalign	2
+			notime	1
+
+			onTime 0 {
+				transition "forecolor" "$desktop::white" "$desktop::typecolor" "250" ;
+				transition "rect" "$d_health_amount::rect" "$health_amount::rect" "250" ;
+				transition "textscale" "0.6" "0.5" "250" ;
+				
+				transition "icon_health::matcolor" "$desktop::white" "$desktop::healthicon" "250" ;
+			}
+
+		}
+		windowDef health_backbar_add
+		{
+			rect	190,420,125,27
+			visible	0
+			background	"gfx/guis/hud/backbar_add"
+			matcolor	1*guitable_10_5[time*0.002],0,0,1
+			shear	0,-.22
+		}
+	}
+	windowDef p_health_5
+	{
+		rect	-181,-398,640,509
+		visible	("gui::mp" == 0 )
+		windowDef statsMenu
+		{
+			rect	191,445,121,26
+			visible	1
+			background	"gfx\guis\hud\ctf_bgbar"
+			matcolor	0,0,0,0
+			backcolor	0.729,0.729,0.729,0.419
+			windowDef Border
+			{
+				rect	-3,2,132,24
+				visible	1
+				background	"gfx\guis\hud\wsbarglow"
+				matcolor	0,0.250,0,0.666
+				backcolor	0,0,0,0
+			}
+			windowDef p_overHealth_text
+			{
+				rect	0,-2,88,28
 				visible	1
 				forecolor	1,1,1,1
 				text	"gui::OverHealth_unit_5"
@@ -3014,7 +3014,7 @@ windowDef Desktop
 			}
 			windowDef p_move_text
 			{
-				rect	39,-2,88,28
+				rect	39,0,88,28
 				visible	1
 				forecolor	1,1,1,1
 				text	"gui::Move_unit_5"
@@ -3026,10 +3026,10 @@ windowDef Desktop
 			}
 			windowDef p_Technique_text
 			{
-				rect	-1,14,88,28
+				rect	0,14,88,28
 				visible	1
 				forecolor	1,1,1,1
-				text	"gui::Technique_unit_5 "
+				text	"gui::Technique_unit_5"
 				gui	::
 				player_health	")"
 				player_health_unit_1	""
@@ -3063,7 +3063,7 @@ windowDef Desktop
 		}
 		windowDef health_backbar
 		{
-			rect	197,229,125,32
+			rect	190,420,125,32
 			visible	1
 			background	"gfx/guis/hud/backbar"
 			matcolor	0,0,0,0.5
@@ -3071,7 +3071,7 @@ windowDef Desktop
 		}
 		windowDef health_valbar
 		{
-			rect	197,229,125,29
+			rect	190,420,125,29
 			visible	1
 			background	"gfx/guis/hud/valbar"
 			matcolor	0.701,0.815,0.431,0.2
@@ -3079,20 +3079,20 @@ windowDef Desktop
 		}
 		windowDef health_ekg
 		{
-			rect	197,229,125,25
+			rect	190,420,125,25
 			visible	1
 			background	"gfx/guis/hud/ekg"
 			matcolor	0.0862,0.105,0.0549,1
 			shear	0,-.22
 		}
-		windowDef p_health_val
+		windowDef p_health_val2
 		{
-			rect	317,229,115,59
+			rect	310,420,115,59
 			visible	1
 			shear	0,-.22
-			windowDef health_val1
+			windowDef health_val
 			{
-				rect	-118,0,125,25
+				rect	-117,0,125,25
 				visible	1
 				background	"gfx/guis/hud/valbar"
 				matcolor	0.701,0.815,0.431,0.35
@@ -3101,16 +3101,16 @@ windowDef Desktop
 		}
 		windowDef d_health_amount
 		{
-			rect	261,236,58,31
+			rect	273,424,40,16
 			visible	0
 		}
 		windowDef health_amount
 		{
-			rect	263,238,52,26
+			rect	239,425,68,16
 			visible	1
 			forecolor	0.866,0.921,0.764,1
-			text	"gui::player_health"
-			textscale	0.5
+			text	"gui::Health_unit_5"
+			textscale	0.25
 			font	"fonts/chain"
 			shear	0,-.22
 			textalign	2
@@ -3127,7 +3127,7 @@ windowDef Desktop
 		}
 		windowDef health_backbar_add
 		{
-			rect	197,229,125,27
+			rect	190,420,125,27
 			visible	0
 			background	"gfx/guis/hud/backbar_add"
 			matcolor	1*guitable_10_5[time*0.002],0,0,1
