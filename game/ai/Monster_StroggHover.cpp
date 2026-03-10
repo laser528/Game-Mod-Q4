@@ -862,8 +862,8 @@ rvMonsterStroggHover::Spawn
 ================
 */
 bool rvMonsterStroggHover::CheckActions ( void ) {
-if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
-		return true;
+	if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
+		return false;
 	}
 	if ( PerformAction ( &actionCircleStrafe,  (checkAction_t)&rvMonsterStroggHover::CheckAction_CircleStrafe ) ) {
 		return true;

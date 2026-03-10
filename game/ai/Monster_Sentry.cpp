@@ -201,8 +201,8 @@ rvMonsterSentry::CheckActions
 ================
 */
 bool rvMonsterSentry::CheckActions ( void ) {
-if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
-		return true;
+	if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
+		return false;
 	}
 
 	if ( kamakaziHealth != 0 ) {

@@ -606,8 +606,8 @@ rvMonsterHarvester::CheckActions
 ================
 */
 bool rvMonsterHarvester::CheckActions ( void ) {
-if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
-		return true;
+	if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
+		return false;
 	}
 
 	// such a dirty hack... I'm not sure what is actually wrong, but somehow nextTurnTime is getting to be a rediculously high number.

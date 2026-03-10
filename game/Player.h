@@ -465,6 +465,8 @@ public:
 // RAVEN END
 	void					CacheWeapons( void );
 
+	void                    Event_CheckTimer(void); // Laser
+
  	bool					HandleESC( void );
    	void					EnterCinematic( void );
    	void					ExitCinematic( void );
@@ -477,6 +479,8 @@ public:
 
 							// delta view angles to allow movers to rotate the view of the player
 	void					UpdateDeltaViewAngles( const idAngles &angles );
+	// LASER
+
 
 	virtual bool			Collide( const trace_t &collision, const idVec3 &velocity );
 
@@ -643,6 +647,7 @@ public:
  	void					UpdateHudAmmo( idUserInterface *hud );
  	void					ShowTip( const char *title, const char *tip, bool autoHide );
  	void					HideTip( void );
+	void					startUnitTimer(bool start);	// Laser
  	bool					IsTipVisible( void ) { return tipUp; };
 	void					ShowObjective( const char *obj );
  	void					HideObjective( void );
@@ -1087,6 +1092,7 @@ private:
 	void					Event_GetAmmoData			( const char *ammoClass );
 	void					Event_RefillAmmo			( void );
 	void					Event_AllowFallDamage		( int toggle );
+	
 	
 	void					Event_EnableTarget			( void );
 	void					Event_DisableTarget			( void );

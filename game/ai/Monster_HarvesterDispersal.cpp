@@ -160,8 +160,8 @@ rvMonsterHarvesterDispersal::CheckActions
 ================
 */
 bool rvMonsterHarvesterDispersal::CheckActions ( void ) {
-if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
-		return true;
+	if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
+		return false;
 	}
 	// If not moving, try turning in place
 	/*

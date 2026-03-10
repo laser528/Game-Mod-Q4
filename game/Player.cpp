@@ -109,6 +109,7 @@ const idEventDef EV_Player_SetExtraProjPassEntity( "setExtraProjPassEntity", "E"
 const idEventDef EV_Player_SetArmor( "setArmor", "f" );
 const idEventDef EV_Player_DamageEffect( "damageEffect", "sE" );
 const idEventDef EV_Player_AllowFallDamage( "allowFallDamage", "d" );
+const idEventDef EV_Player_Timer("timerCheck"); // LAser
 
 // mekberg: allow enabling/disabling of objectives
 const idEventDef EV_Player_EnableObjectives( "enableObjectives" );
@@ -142,6 +143,7 @@ CLASS_DECLARATION( idActor, idPlayer )
 	EVENT( EV_Player_GetAmmoData,			idPlayer::Event_GetAmmoData )
 	EVENT( EV_Player_RefillAmmo,			idPlayer::Event_RefillAmmo )
 	EVENT( EV_Player_AllowFallDamage,		idPlayer::Event_AllowFallDamage )
+	EVENT(EV_Player_Timer,					idPlayer::Event_CheckTimer) // LAser
 
 
 // mekberg: allow enabling/disabling of objectives
@@ -12804,6 +12806,24 @@ idPlayer::Event_HideTip
 */
 void idPlayer::Event_HideTip( void ) {
 	HideTip();
+}
+
+// Laser
+bool stopper = false;
+void idPlayer::Event_CheckTimer() {
+	if (stopper) return;
+	gameLocal.checkTimeOut();
+	gameLocal.UpdateAllUnitsGui();
+	PostEventMS(&EV_Player_Timer, 1000);
+}
+void idPlayer::startUnitTimer(bool start) {
+	if (start) {
+		stopper = false;
+		PostEventMS(&EV_Player_Timer, 1000);
+		return;
+	}
+	stopper = true;
+	
 }
 
 /*

@@ -3021,6 +3021,13 @@ void Cmd_CheckSave_f( const idCmdArgs &args );
 void Cmd_ShuffleTeams_f( const idCmdArgs& args ) {
 	gameLocal.mpGame.ShuffleTeams();
 }
+// Laser
+void Cmd_ToggleHelpMenu(const idCmdArgs& args) {
+	gameLocal.toggleHelpMenu();
+}
+void Cmd_EndTurn(const idCmdArgs& args) {
+	gameLocal.endTurn(1);
+}
 
 #ifndef _FINAL
 void Cmd_ClientOverflowReliable_f( const idCmdArgs& args ) {
@@ -3232,7 +3239,10 @@ void idGameLocal::InitConsoleCommands( void ) {
 	cmdSystem->AddCommand( "buyMenu",				Cmd_ToggleBuyMenu_f,		CMD_FL_GAME,				"Toggle buy menu (if in a buy zone and the game type supports it)" );
 	cmdSystem->AddCommand( "buy",					Cmd_BuyItem_f,				CMD_FL_GAME,				"Buy an item (if in a buy zone and the game type supports it)" );
 // RITUAL END
-
+	// LASER KEYBINDS
+	cmdSystem->AddCommand("toggleHelpMenu",			Cmd_ToggleHelpMenu,			CMD_FL_GAME,				"Toggle Help menu");
+	cmdSystem->AddCommand("EndTurn",				Cmd_EndTurn,				CMD_FL_GAME,				"buy Item");
+	
 }
 
 /*

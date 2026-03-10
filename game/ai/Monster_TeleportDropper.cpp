@@ -413,8 +413,8 @@ rvMonsterTeleportDropper::CheckActions
 ================
 */
 bool rvMonsterTeleportDropper::CheckActions ( void ) {
-if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
-		return true;
+	if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
+		return false;
 	}
 
 	if ( PerformAction ( &actionDropSpawners, (checkAction_t)&rvMonsterTeleportDropper::CheckAction_DropSpawners ) ) {

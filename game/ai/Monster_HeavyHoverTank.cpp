@@ -266,8 +266,8 @@ rvMonsterHeavyHoverTank::Spawn
 ================
 */
 bool rvMonsterHeavyHoverTank::CheckActions ( void ) {
-if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
-		return true;
+	if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
+		return false;
 	}
 
 	if ( weaponStateIdeal != weaponStateCurrent ) {

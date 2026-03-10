@@ -551,8 +551,8 @@ public:
 	idEntityPtr<idEntity>	pusher;
 	idEntityPtr<idEntity>	scriptedActionEnt;
 
-	bool                    canMakeActionLaser = false; // Laser
-	bool                    canMakeAttackLaser = false; 
+	bool                    canMakeActionLaser = true; // Laser
+	bool                    canMakeAttackLaser = true; 
 	int						unitTurn;
 
 

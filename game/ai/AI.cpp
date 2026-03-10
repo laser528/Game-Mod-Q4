@@ -140,7 +140,6 @@ idAI::idAI ( void ) {
 	actionSkipTime	= 0;
 	actionTime		= 0;
 
-	canMakeActionLaser = false;
 	unitTurn = 0;
 }
 
@@ -1473,7 +1472,11 @@ idAI::ReactionTo
 =====================
 */
 int idAI::ReactionTo( const idEntity *ent ) {
-
+	if (gameLocal.CheckInit()) {
+		gameLocal.UpdateAllUnitsGui();
+		//gameLocal.checkTimeOut();
+	}
+	//gameLocal.UpdateAllUnitsGui(); Laser
 	if ( ent->fl.hidden ) {
 		// ignore hidden entities
 		return ATTACK_IGNORE;

@@ -1109,6 +1109,10 @@ public:
 	void                    endAction(const idAI* ent, int Action);
 	void					levelUp(int unit);
 	void					checkTimeOut(void);
+	void				    toggleHelpMenu(void);
+	void					endTurn(bool isClient);
+	void					UpdateAllUnitsGui();
+	bool					CheckInit();
 
 private:
 	char					clientGuids[ MAX_CLIENTS ][ CLIENT_GUID_LENGTH ];

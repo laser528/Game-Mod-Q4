@@ -173,8 +173,8 @@ rvMonsterStreamProtector::CheckActions
 ================
 */
 bool rvMonsterStreamProtector::CheckActions ( void ) {
-if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
-		return true;
+	if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
+		return false;
 	}
 	// If not moving, try turning in place
 	if ( !move.fl.moving && gameLocal.time > combat.investigateTime ) {

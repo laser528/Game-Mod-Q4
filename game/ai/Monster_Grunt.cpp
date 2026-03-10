@@ -140,18 +140,20 @@ rvMonsterGrunt::CheckActions
 ================
 */
 bool rvMonsterGrunt::CheckActions ( void ) {
-if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
-		return true;
+	if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
+
+		return false;
 	}
 
 	// If our health is below the rage threshold then enrage
 	if ( health < rageThreshold ) { 
-		PerformAction ( "Torso_Enrage", 4, true );
+		gameLocal.Printf("Attempt enrage Attck, ");
 		return true;
 	}
 
 	// Moving melee attack?
 	if ( PerformAction ( &actionMeleeMoveAttack, (checkAction_t)&idAI::CheckAction_MeleeAttack, NULL ) ) {
+		gameLocal.Printf("Attempt moving melee\n ");
 		return true;
 	}
 	

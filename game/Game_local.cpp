@@ -7774,7 +7774,7 @@ idEntity* idGameLocal::HitScan(
 				if (owner && owner->IsType(idPlayer::GetClassType())) {
 					//gameLocal.SpawnConvoy();
 					//printf("Spawn Attempt");
-					gameLocal.GetLocalPlayer()->GetHud()->SetStateString("Technique_unit_5", "YURRRR");
+		
 					gameLocal.GetLocalPlayer()->GetHud()->StateChanged(gameLocal.time);
 				
 					
@@ -8494,7 +8494,7 @@ static idEntity* Cmd_Spawn_f(const idCmdArgs& args, const idVec3& spawns) {
 
 
 	if (newEnt) {
-		gameLocal.Printf("spawned entity '%s'\n", newEnt->name.c_str());
+		// gameLocal.Printf("spawned entity '%s'\n", newEnt->name.c_str());
 		return newEnt;
 	}
 	// RAVEN END
@@ -8534,6 +8534,8 @@ growthRates unitGrowthRates[5];
 int unitTurnAttacks[5];
 int attackTimeOuts[5];
 int movTimeOuts[5];
+int guiHelpMenu = 0;
+int enemyTimeOut = 0;
 
 bool init = false;
 // showHelpMenuLaser
@@ -8571,31 +8573,7 @@ const char statGuiKeys[7][50] = {
 	"Level_unit_",
 	"Health_unit_"
 };
-const char helpMenuData[] = (
-"General Ulysses Harper 'Do you copy .... COMANDING OFFICER GET YOURSELF TOGETHER "
-"your team crashed onto the strogg base over an hour ago only five men are left. "
-"YOU HAVE TO LEAD YOUR MEN OR THEY WILL DIE.you can send commands to your men "
-"by selecting them with the[Mouse 1 Button] and using the same button on a new "
-"location to get them to MOVE there.Another command you can do is ATTACK by "
-"selecting one of your men and then selecting an enemy.But thats not all "
-"luckily for you your Medic and Technician surived giving you access to two "
-"special commands.The self explanatory one being the medic HEAL command by "
-"clicking on the medic and then one of your own units it will heal your Soilder. "
-"The technician if used correctly can be one of your most important weapons "
-"as he has access to the REPAIR command which allows a unit who has already "
-"made an action this turn to make a second one. Also one of the strogg appears "
-"to have gotten one of your men and turned him yet he retains his sanity. IT "
-"IS IMPERETIVE HE IS RETURNED TO BASE AS SOON AS POSSIBLE OUR FUTURES ARE RIDING "
-"ON THIS. Thats all the help I can give you god speed get those men back to their families.\n"
-"OBJECTIVES: \n" 
-"      DONT LET MATHEW KANE DIE \n"
-"      COMPLETE THE MISSION WITHIN 50 Turns \n"
-"OVER HEALTH | OH - Grants a 10 % increase to maximum health.\n"
-"MOVE | MOV - Increases the range your unit can move.\n"
-"TECHNIQUE | TEC - Increases the ammount of attacks a unit will perfom.\n"
-"EXPERIENCE | EXP - When reaching 100 EXP your unit will level up raising its stats\n"
-"LEVEL | LVL - A repersentation of a units strength Promotes LVL 5\n"
-"Turn: %i / 50");
+
 
 #define OVER_HEALTH 0
 #define MOVE 1
@@ -8633,22 +8611,28 @@ void endGame() {
 			if (convoyTurns[i][0]) return;
 		}
 		turn = 0;
-	}
-
-	for (int i = 0; i < 5; i++) resetUnit(i);
-	turn = 1;
-}
-void forceEndGame() {
-	if (turn) {
-		for (int i = 0; i < 5; i++) {
-			convoyTurns[i][0] = 0;
-		}
-		turn = 0;
 		return;
 	}
 
 	for (int i = 0; i < 5; i++) resetUnit(i);
 	turn = 1;
+}
+void forceEndTurn() {
+	selectedUnit = NULL;
+	if (turn) {
+		for (int i = 0; i < 5; i++) {
+			convoyTurns[i][0] = 0;
+		}
+		turn = 0;
+		gameLocal.Printf("Turn: 0");
+		enemyTimeOut = gameLocal.time;
+
+		return;
+	}
+
+	for (int i = 0; i < 5; i++) resetUnit(i);
+	turn = 1;
+	gameLocal.Printf("Turn: 1");
 }
 
 void updateStatsGui(int unit, int stat) {
@@ -8700,6 +8684,14 @@ void updateAllStatsGui(int unit) {
 	for (int i = 0; i < 7; i++)
 		updateStatsGui(unit, i);
 }
+void idGameLocal::UpdateAllUnitsGui() {
+	for (int i = 0; i < 5; i++) 
+		updateAllStatsGui(i);
+}
+
+bool idGameLocal::CheckInit() {
+	return init;
+}
 
 void updateHelpMenu() {
 	// showHelpMenuLaser
@@ -8707,9 +8699,27 @@ void updateHelpMenu() {
 	// P_HelpMenu_Laser
 	
 	//sprintf(guiData, helpMenuData, turnCounter);
-	gameLocal.GetLocalPlayer()->GetHud()->HandleNamedEvent("showHelpMenuLaser");
-	gameLocal.GetLocalPlayer()->GetHud()->SetStateInt("HelpMenu_Data", turnCounter);
+	char buffer[6];
+	sprintf(buffer, "%i/50", turnCounter);
+	
+	gameLocal.GetLocalPlayer()->GetHud()->SetStateString("HelpMenu_Data", buffer);
 	gameLocal.GetLocalPlayer()->GetHud()->StateChanged(gameLocal.time);
+	
+}
+void idGameLocal::toggleHelpMenu() {
+	if (guiHelpMenu) gameLocal.GetLocalPlayer()->GetHud()->HandleNamedEvent("hideHelpMenuLaser");
+	else			 gameLocal.GetLocalPlayer()->GetHud()->HandleNamedEvent("showHelpMenuLaser");
+	guiHelpMenu = !guiHelpMenu;
+}
+
+void idGameLocal::endTurn(bool isClient) {
+	if (turn) {
+		forceEndTurn();
+		return;
+	}
+	if (!isClient) {
+		forceEndTurn();
+	}
 	
 }
 
@@ -8748,6 +8758,7 @@ void idGameLocal::levelUp(int unit) {
 
 void idGameLocal::SpawnConvoy() {
 	idCmdArgs args;
+	idThread* timerThread;
 	if (init) return;
 
 	for (int i = 0; i < 5; i++) { 
@@ -8758,6 +8769,8 @@ void idGameLocal::SpawnConvoy() {
 		convoy[i]->convoyPos = i;
 
 		idAI* unitAI = static_cast<idAI*>(convoy[i]);
+		unitAI->canMakeActionLaser = false;
+		unitAI->canMakeAttackLaser = false;
 		unitAI->unitTurn = 1;
 		// Init convoy blocks
 		convoyTurns[i][0] = 1;
@@ -8778,10 +8791,12 @@ void idGameLocal::SpawnConvoy() {
 		for (int i = 0; i < unitStats[i].level; i++) { // Level rewards
 			levelUp(i);
 		}
-
+		
 	}
+	gameLocal.GetLocalPlayer()->GetHud()->HandleNamedEvent("hideHelpMenuLaser");
 	updateHelpMenu();
 	//GetLocalPlayer()->GetHud()->SetStateInt("#str_124001", unitStats[0].overHealth);
+	gameLocal.GetLocalPlayer()->startUnitTimer(true);
 	init = true;
 }
 
@@ -8834,7 +8849,7 @@ static void attack(idEntity* target, idAI* unitAi) {
 void idGameLocal::selected(idEntity* ent, idVec3& pos) {
 	float acceptableRangeToTarget = 224; //42
 
-	if (!init) {
+	if (!init || !turn) {
 		return;
 	}
 	if (ent == selectedUnit) {
@@ -8908,10 +8923,36 @@ void idGameLocal::selected(idEntity* ent, idVec3& pos) {
 	}
 
 }
+void checkTimeOutAlt() {
+	if (!turn) {
+		gameLocal.Printf("-------\nCUR: %i|\nETime: %i\n-------");
+		if ((gameLocal.time - enemyTimeOut) > 7) {
+			forceEndTurn();
+		}
+	}
+	for (int i = 0; i < 5; i++) {
+		if (!attackTimeOuts[i]) continue;
 
+		idAI* unitAI = static_cast<idAI*>(convoy[i]);
+		if ((gameLocal.time - attackTimeOuts[i]) > 60000) {
+
+			attackTimeOuts[i] = 0;
+			unitTurnAttacks[i] = unitStats[i].tech;
+			convoyTurns[i][0] = false;
+			convoyTurns[i][1] = false;
+			unitAI->canMakeAttackLaser = false;
+		}
+		if ((gameLocal.time - movTimeOuts[i]) > 10000) {
+			gameLocal.endAction(unitAI, 1);
+		}
+	}
+}
 void idGameLocal::checkTimeOut() {
 	if (!turn) {
-		// Enemy Logic
+		gameLocal.Printf("-------\nCUR: %i|\nETime: %i\n-------");
+		if ((time - enemyTimeOut) > 7000) {
+			forceEndTurn();
+		}
 	}
 	for (int i = 0; i < 5; i++) {
 		if (!attackTimeOuts[i]) continue;
