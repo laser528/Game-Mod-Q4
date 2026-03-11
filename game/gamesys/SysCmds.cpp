@@ -3028,6 +3028,11 @@ void Cmd_ToggleHelpMenu(const idCmdArgs& args) {
 void Cmd_EndTurn(const idCmdArgs& args) {
 	gameLocal.endTurn(1);
 }
+void Cmd_PromoteUnit(const idCmdArgs& args) {
+	for (int i = 1; i < args.Argc(); i++) {
+		gameLocal.promoteCommand(atoi(args.Argv(i)));
+	}
+}
 
 #ifndef _FINAL
 void Cmd_ClientOverflowReliable_f( const idCmdArgs& args ) {
@@ -3242,6 +3247,7 @@ void idGameLocal::InitConsoleCommands( void ) {
 	// LASER KEYBINDS
 	cmdSystem->AddCommand("toggleHelpMenu",			Cmd_ToggleHelpMenu,			CMD_FL_GAME,				"Toggle Help menu");
 	cmdSystem->AddCommand("EndTurn",				Cmd_EndTurn,				CMD_FL_GAME,				"buy Item");
+	cmdSystem->AddCommand("PromoteUnits",			Cmd_PromoteUnit,				CMD_FL_GAME,				"buy Item");
 	
 }
 

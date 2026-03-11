@@ -1113,6 +1113,7 @@ public:
 	void					endTurn(bool isClient);
 	void					UpdateAllUnitsGui();
 	bool					CheckInit();
+	void					promoteCommand(int unit);
 
 private:
 	char					clientGuids[ MAX_CLIENTS ][ CLIENT_GUID_LENGTH ];

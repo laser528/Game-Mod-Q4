@@ -8590,21 +8590,21 @@ const char statGuiKeys[7][50] = {
 #define LEVEL 5
 #define HEALTH 6
 
-idVec3 spawns[5] = { 
-	idVec3(9766.247070, -7043.187012, -13.725734),
-	idVec3(10009.479492, -7119.711914, -28.155727),
-	idVec3(9940.638672, -7010.305176, -2.728617),
-	idVec3(9867.611328, -6884.916016, 5.699490),
-	idVec3(9812.436523, -7013.122559, -5.711244),
-
-};
-//idVec3 spawns[5] = {
-//	idVec3(9476.472656, -7229.587891, 3.992622),
-//	idVec3(9476.580078, -6755.238281, 3.219983),
-//	idVec3(9152.088867, -7042.238281, 1.000000),
-//	idVec3(9455.381836, -7054.117188, 0.368508),
-//	idVec3(9477.897461, -6892.882812, 2.976085)
+//idVec3 spawns[5] = { 
+//	idVec3(9766.247070, -7043.187012, -13.725734),
+//	idVec3(10009.479492, -7119.711914, -28.155727),
+//	idVec3(9940.638672, -7010.305176, -2.728617),
+//	idVec3(9867.611328, -6884.916016, 5.699490),
+//	idVec3(9812.436523, -7013.122559, -5.711244),
+//
 //};
+idVec3 spawns[5] = {
+	idVec3(9766.25, -7043.19, -13.72),
+	idVec3(10009.48, -7119.71, -28.15),
+	idVec3(9152.09, -7042.23, 1.00),
+	idVec3(9455.38, -7054.11, 0.36),
+	idVec3(9477.90, -6892.88, 2.97)
+};
 
 //idVec3 spawns[5] = {
 //	idVec3(10081.232422, -7752.856934, 128.000000),
@@ -8750,6 +8750,44 @@ bool idGameLocal::GetTurn() {
 	return turn;
 }
 
+void promote(int unit) {
+	idVec3 pos;
+	idCmdArgs args;
+	idEntity* oldUnit = convoy[unit];
+
+	pos = oldUnit->GetPhysics()->GetOrigin();
+
+	args.TokenizeString(unitCommands[unit+5], false);
+	convoy[unit] = Cmd_Spawn_f(args, pos);
+
+	convoy[unit]->convoyPos = unit;
+
+	idAI* unitAI = static_cast<idAI*>(convoy[unit]);
+	idAI* oldAI = static_cast<idAI*>(oldUnit);
+	unitAI->unitTurn = 1;
+	
+	unitAI->canMakeActionLaser = oldAI->canMakeActionLaser;
+	unitAI->canMakeAttackLaser = oldAI->canMakeAttackLaser;
+
+	unitStats[unit].maxHealth += unitAI->health;
+	unitStats[unit].baseHealth += unitAI->health;
+
+
+
+	for (int i = 0; i < 4; i++) { // Level rewards
+		gameLocal.levelUp(unit);
+	}
+
+	unitStats[unit].level = 1; // 1-4 Lvl
+
+	updateAllStatsGui(unit);
+	
+
+	oldUnit->~idEntity(); // DESTROY OLD UNIT
+}
+void idGameLocal::promoteCommand(int unit) {
+	promote(unit);
+}
 void idGameLocal::levelUp(int unit) {
 	if (random.RandomFloat() < unitGrowthRates[unit].overHealth) {
 		// convoy[unit]->health += (convoy[unit]->health)*0.1; Unit proably shouldnt gain hp from level up
@@ -8775,8 +8813,17 @@ void idGameLocal::levelUp(int unit) {
 		updateStatsGui(unit, LUCK);
 		// No Update
 	}
+	unitStats[unit].level += 1;
+	
+	if (unitStats[unit].level >= 8 && !unitStats[unit].superClass) {
+		gameLocal.Printf("Level: %i\n", unitStats[unit].level);
+		unitStats[unit].superClass = true;
+		promote(unit);
+		
+	}
 
 }
+
 
 
 void idGameLocal::SpawnConvoy() {
@@ -8812,11 +8859,11 @@ void idGameLocal::SpawnConvoy() {
 		unitStats[i].maxHealth = unitAI->health;
 		unitStats[i].baseHealth = unitAI->health;
 
-		unitStats[i].level = random.RandomInt(3) + 1; // 1-4 Lvl
+		//unitStats[i].level = random.RandomInt(3) + 1; // 1-4 Lvl
 
 		updateAllStatsGui(i);
 		gameLocal.GetLocalPlayer()->GetHud()->SetStateString(buffer, unitNames[i]);
-		for (int i = 0; i < unitStats[i].level; i++) { // Level rewards
+		for (int z = 0; z < (random.RandomInt(3) + 1); z++) { // Level rewards
 			levelUp(i);
 		}
 		

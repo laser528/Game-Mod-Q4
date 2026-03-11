@@ -2379,7 +2379,7 @@ windowDef Desktop
 	}
 	windowDef p_health_3
 	{
-		rect	-187,-281,640,588
+		rect	-186,-280,640,588
 		visible	("gui::mp" == 0 )
 		windowDef statsMenu
 		{
@@ -2528,6 +2528,14 @@ windowDef Desktop
 			background	"gfx/guis/hud/backbar_add"
 			matcolor	1*guitable_10_5[time*0.002],0,0,1
 			shear	0,-.22
+		}
+		windowDef health_name2
+		{
+			rect	196,435,114,18
+			visible	1
+			forecolor	1,1,1,1
+			text	"gui::Name_unit_3"
+			textscale	0.15
 		}
 	}
 	windowDef p_health_2
@@ -2682,10 +2690,18 @@ windowDef Desktop
 			matcolor	1*guitable_10_5[time*0.002],0,0,1
 			shear	0,-.22
 		}
+		windowDef health_name1
+		{
+			rect	193,414,114,18
+			visible	1
+			forecolor	1,1,1,1
+			text	"gui::Name_unit_2"
+			textscale	0.15
+		}
 	}
 	windowDef p_health_4
 	{
-		rect	-186,-208,640,480
+		rect	-185,-195,640,480
 		visible	("gui::mp" == 0 )
 		windowDef statsMenu
 		{
@@ -2835,10 +2851,18 @@ windowDef Desktop
 			matcolor	1*guitable_10_5[time*0.002],0,0,1
 			shear	0,-.22
 		}
+		windowDef health_name3
+		{
+			rect	195,284,114,18
+			visible	1
+			forecolor	1,1,1,1
+			text	"gui::Name_unit_4"
+			textscale	0.15
+		}
 	}
 	windowDef p_health_1
 	{
-		rect	-185,-120,640,509
+		rect	-184,-119,640,509
 		visible	("gui::mp" == 0 )
 		windowDef statsMenu
 		{
@@ -2987,6 +3011,14 @@ windowDef Desktop
 			background	"gfx/guis/hud/backbar_add"
 			matcolor	1*guitable_10_5[time*0.002],0,0,1
 			shear	0,-.22
+		}
+		windowDef health_name
+		{
+			rect	193,416,114,18
+			visible	1
+			forecolor	1,1,1,1
+			text	"gui::Name_unit_1"
+			textscale	0.15
 		}
 	}
 	windowDef p_health_5
@@ -3140,6 +3172,14 @@ windowDef Desktop
 			background	"gfx/guis/hud/backbar_add"
 			matcolor	1*guitable_10_5[time*0.002],0,0,1
 			shear	0,-.22
+		}
+		windowDef health_name4
+		{
+			rect	193,414,114,18
+			visible	1
+			forecolor	1,1,1,1
+			text	"gui::Name_unit_5"
+			textscale	0.15
 		}
 	}
 	windowDef P_HelpMenu_Laser
