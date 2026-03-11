@@ -449,6 +449,14 @@ windowDef Desktop
 		set "P_HelpMenu_Laser::visible" "0";
 	}
 
+	onNamedEvent showVictoryMenuLaser {
+		set "P_VictoryMenu_Laser::visible" "1";
+	}
+
+	onNamedEvent HideVictoryMenuLaser {
+		set "P_VictoryMenu_Laser::visible" "0";
+	}
+
 	windowDef speed
 	{
 		rect	550,70,80,20
@@ -3198,13 +3206,13 @@ windowDef Desktop
 		{
 			rect	14,16,307,141
 			visible	1
-			text	"General Ulysses Harper Do you copy .... COMANDING OFFICER GET YOURSELF TOGETHER your team crashed onto the strogg base over an hour ago only five men are left. YOU HAVE TO LEAD YOUR MEN OR THEY WILL DIE. you can send commands to your men by selecting them with the[Mouse 1 Button] and using the same button on a new location to get them to MOVE there. Another command you can do is ATTACK by selecting one of your men and then selecting an enemy. But thats not all luckily for you your Medic and Technician surived giving you access to two special commands. The self explanatory one being the medic HEAL command by clicking on the medic and then one of your own "
+			text	"General Ulysses Harper calling in Do you copy .... COMANDING OFFICER GET YOURSELF TOGETHER your team crashed onto the strogg base over an hour ago only five men are left. YOU HAVE TO LEAD YOUR MEN OR THEY WILL DIE. you can send commands to your men by selecting them with the[Mouse 1 Button] and using the same button on a new location to get them to MOVE there. Another command you can do is ATTACK by selecting one of your men and then selecting an enemy. But thats not all luckily for you your Medic and Technician surived giving you access to two special commands. The self explanatory one being the medic HEAL command by clicking on the medic and then one of your own "
 			forecolor	1,1,1,1
 			textscale	0.2
 		}
 		windowDef data_2
 		{
-			rect	16,155,307,113
+			rect	14,157,307,113
 			visible	1
 			text	"units it will heal your Soilder. The technician if used correctly can be one of your most important weapons as he has access to the REPAIR command which allows a unit who has already made an action this turn to make a second one. Also one of the strogg appears to have gotten one of your men and turned him yet he retains his sanity. IT IS IMPERETIVE HE IS RETURNED TO BASE AS SOON AS POSSIBLE OUR FUTURES ARE RIDING ON THIS. Thats all the help I can give you god speed get those men back to their families."
 			forecolor	1,1,1,1
@@ -3212,7 +3220,7 @@ windowDef Desktop
 		}
 		windowDef data_3
 		{
-			rect	14,269,307,118
+			rect	17,288,307,118
 			visible	1
 			text	"OBJECTIVES:\n DONT LET MATHEW KANE DIE \nCOMPLETE THE MISSION WITHIN 50 Turns\n\n OH - Grants a 10 % increase to maximum health.\n MOV - Increases the range your unit can move. \nTEC - Increases the ammount of attacks a unit will perfom. \nEXP - When reaching 100 EXP your unit will level up raising its stats \nLVL - A repersentation of a units strength Promotes LVL 5"
 			forecolor	1,1,1,1
@@ -3233,6 +3241,27 @@ windowDef Desktop
 			forecolor	1,1,1,1
 			textscale	0.5
 			text	"gui::HelpMenu_Data"
+		}
+	}
+	windowDef P_VictoryMenu_Laser
+	{
+		rect	139,156,325,178
+		visible	1
+		windowDef turn_user1
+		{
+			rect	7,6,307,163
+			visible	1
+			forecolor	1,1,1,1
+			textscale	0.25
+			text	"gui::VictoryMenu_Data"
+		}
+		windowDef Border1
+		{
+			rect	-24,-9,369,196
+			visible	1
+			background	"gfx\guis\hud\wsbarglow"
+			matcolor	0,0.247,0,0.662
+			backcolor	0,0,0,0
 		}
 	}
 }

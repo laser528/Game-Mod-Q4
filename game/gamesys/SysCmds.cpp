@@ -3038,6 +3038,14 @@ void Cmd_LevelUpUnit(const idCmdArgs& args) {
 		gameLocal.levelUp(atoi(args.Argv(i)));
 	}
 }
+void Cmd_SetTurnUnit(const idCmdArgs& args) {
+	gameLocal.SetTurnCounter(atoi(args.Argv(1)));
+}
+
+void Cmd_ResetUnits(const idCmdArgs& args) {
+	gameLocal.Printf("run it at all");
+	gameLocal.resetUnits();
+}
 
 #ifndef _FINAL
 void Cmd_ClientOverflowReliable_f( const idCmdArgs& args ) {
@@ -3254,6 +3262,8 @@ void idGameLocal::InitConsoleCommands( void ) {
 	cmdSystem->AddCommand("EndTurn",				Cmd_EndTurn,				CMD_FL_GAME,				"End Turn");
 	cmdSystem->AddCommand("PromoteUnits",			Cmd_PromoteUnit,			CMD_FL_GAME,				"Promote Unit");
 	cmdSystem->AddCommand("LevelUpUnits",			Cmd_LevelUpUnit,			CMD_FL_GAME,				"Level up unit");
+	cmdSystem->AddCommand("SetTurn",				Cmd_SetTurnUnit,			CMD_FL_GAME,				"Set Game Turn");
+	cmdSystem->AddCommand("ResetUnits",				Cmd_ResetUnits,				CMD_FL_GAME,				"Reset Units");
 
 	
 }

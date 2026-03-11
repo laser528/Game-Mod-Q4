@@ -1114,6 +1114,9 @@ public:
 	void					UpdateAllUnitsGui();
 	bool					CheckInit();
 	void					promoteCommand(int unit);
+	void					showVictoryMenu(int win);
+	void                    SetTurnCounter(int change);
+	void					resetUnits(void);
 
 private:
 	char					clientGuids[ MAX_CLIENTS ][ CLIENT_GUID_LENGTH ];

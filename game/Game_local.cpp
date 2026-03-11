@@ -8538,6 +8538,32 @@ int guiHelpMenu = 0;
 int enemyTimeOut = 0;
 
 bool init = false;
+void idGameLocal::resetUnits() {
+	init = false;
+
+	turn = 1;
+	turnCounter = 1;
+	for (int i = 0; i < 5; i++) {
+		convoy[i]->~idEntity();
+	}
+	convoy[5] = {};
+	selectedUnit = NULL;
+	pointerEntity = NULL; // marine head as anchor due to unrealiability of move to
+	convoyTurns[5][2];
+	convoyActions[5];
+	unitStats[5];
+	unitGrowthRates[5];
+	unitTurnAttacks[5];
+	attackTimeOuts[5];
+	movTimeOuts[5];
+	guiHelpMenu = 0;
+	enemyTimeOut = 0;
+
+	gameLocal.SpawnConvoy();
+	
+}
+
+
 // showHelpMenuLaser
 // gui::HelpMenu_Data
 // P_HelpMenu_Laser
@@ -8599,11 +8625,11 @@ const char statGuiKeys[7][50] = {
 //
 //};
 idVec3 spawns[5] = {
-	idVec3(9766.25, -7043.19, -13.72),
-	idVec3(9812.436523, -7013.122559, -5.711244),
-	idVec3(9152.09, -7042.23, 1.00),
-	idVec3(9455.38, -7054.11, 0.36),
-	idVec3(9477.90, -6892.88, 2.97)
+	idVec3(9766.25, -7043.19, -4.72),
+	idVec3(9812.436523, -7013.122559, 5.711244),
+	idVec3(9152.09, -7042.23, 6.00),
+	idVec3(9455.38, -7054.11, 5.36),
+	idVec3(9477.90, -6892.88, 7.97)
 };
 
 //idVec3 spawns[5] = {
@@ -8652,6 +8678,19 @@ void endGame() {
 	for (int i = 0; i < 5; i++) resetUnit(i);
 	turn = 1;
 }
+const char victoryText[2][300] = {
+	"General Uleyses Harper 'May their souls rest in peace those were good men"
+	"I hope your ready to work overtime we took major losses this battle and we have a war to win"
+	"\n\tDEFEAT",
+	"General Uleyses Harper 'YOU DID IT YOU SAVED HUMANITY WITH KANE SAFELY"
+	"IN OUR POSSESION WE CAN POTENTIALLY BRING BACK OUR ENSLAVED BRETHEREN'\n\tVICTORY"
+};
+void idGameLocal::showVictoryMenu(int win) {
+	gameLocal.Printf("END GAME");
+	gameLocal.GetLocalPlayer()->GetHud()->SetStateString("VictoryMenu_Data", victoryText[win]);
+	gameLocal.GetLocalPlayer()->GetHud()->HandleNamedEvent("showVictoryMenuLaser");
+}
+
 void forceEndTurn() {
 	selectedUnit = NULL;
 	if (turn) {
@@ -8669,6 +8708,9 @@ void forceEndTurn() {
 	turn = 1;
 	turnCounter += 1;
 	updateHelpMenu();
+	if (turnCounter > 50) {
+		gameLocal.showVictoryMenu(1);
+	}
 	gameLocal.Printf("Turn: 1\n");
 }
 
@@ -8831,8 +8873,9 @@ void idGameLocal::levelUp(int unit) {
 void idGameLocal::SpawnConvoy() {
 	idCmdArgs args;
 	idThread* timerThread;
+	gameLocal.Printf("Run it forward");
 	if (init) return;
-
+	gameLocal.Printf("Run it back");
 	for (int i = 0; i < 5; i++) { 
 		char buffer[50];
 
@@ -8870,6 +8913,7 @@ void idGameLocal::SpawnConvoy() {
 		}
 		
 	}
+	gameLocal.GetLocalPlayer()->GetHud()->HandleNamedEvent("hideVictoryMenuLaser");
 	gameLocal.GetLocalPlayer()->GetHud()->HandleNamedEvent("hideHelpMenuLaser");
 	updateHelpMenu();
 	//GetLocalPlayer()->GetHud()->SetStateInt("#str_124001", unitStats[0].overHealth);
@@ -8880,7 +8924,9 @@ void idGameLocal::SpawnConvoy() {
 void idGameLocal::SetTurn(bool change) {
 	turn = change;
 }
-
+void idGameLocal::SetTurnCounter(int change) {
+	turnCounter = change;
+}
 
 static void attack(idEntity* target, idAI* unitAi) {
 	unitAi->SetEnemy(target);
