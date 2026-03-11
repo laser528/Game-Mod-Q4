@@ -2172,6 +2172,11 @@ idAI::SetEnemy
 */
 bool idAI::SetEnemy( idEntity *newEnemy ) {
 	idEntity*	oldEnemy;
+	// Laser
+	
+	if (newEnemy == gameLocal.GetLocalPlayer()) {
+		return false;
+	}
 
 	// Look for obvious early out
 	if ( enemy.ent == newEnemy ) {

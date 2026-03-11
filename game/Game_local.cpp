@@ -7780,7 +7780,7 @@ idEntity* idGameLocal::HitScan(
 					
 					gameLocal.selected(ent, collisionPoint);
 
-					//gameLocal.Printf("hit: x: %f | y: %f | z: %f\n", collisionPoint.x, collisionPoint.y, collisionPoint.z);
+					// gameLocal.Printf("hit: x: %f | y: %f | z: %f\n", collisionPoint.x, collisionPoint.y, collisionPoint.z);
 				}
 				checkTimeOut();
 				
@@ -8590,7 +8590,7 @@ const char statGuiKeys[7][50] = {
 #define LEVEL 5
 #define HEALTH 6
 
-idVec3 spawns[5] = {
+idVec3 spawns[5] = { 
 	idVec3(9766.247070, -7043.187012, -13.725734),
 	idVec3(10009.479492, -7119.711914, -28.155727),
 	idVec3(9940.638672, -7010.305176, -2.728617),
@@ -8598,7 +8598,21 @@ idVec3 spawns[5] = {
 	idVec3(9812.436523, -7013.122559, -5.711244),
 
 };
+//idVec3 spawns[5] = {
+//	idVec3(9476.472656, -7229.587891, 3.992622),
+//	idVec3(9476.580078, -6755.238281, 3.219983),
+//	idVec3(9152.088867, -7042.238281, 1.000000),
+//	idVec3(9455.381836, -7054.117188, 0.368508),
+//	idVec3(9477.897461, -6892.882812, 2.976085)
+//};
 
+//idVec3 spawns[5] = {
+//	idVec3(10081.232422, -7752.856934, 128.000000),
+//	idVec3(10164.486328, -7967.451172, 128.000000),
+//	idVec3(9950.062500, -8114.658691, 128.000000),
+//	idVec3(10324.337891, -8101.353516, 128.000000),
+//	idVec3(10315.640625, -7775.496582, 128.000000)
+//};
 
 const char pointerCommand[50] = "spawn char_marinehead_helmet_medic";
 
@@ -8820,8 +8834,9 @@ void idGameLocal::SetTurn(bool change) {
 
 
 static void attack(idEntity* target, idAI* unitAi) {
-
+	unitAi->SetEnemy(target);
 	unitAi->canMakeAttackLaser = true;
+	
 
 	for (int i = 0; i < 5; i++) {
 		if (convoy[i] != target) continue;
@@ -8869,7 +8884,7 @@ static void attack(idEntity* target, idAI* unitAi) {
 
 
 void idGameLocal::selected(idEntity* ent, idVec3& pos) {
-	float acceptableRangeToTarget = 224; //42
+	float acceptableRangeToTarget = 160; //42
 
 	if (!init || !turn) {
 		return;
@@ -8891,18 +8906,20 @@ void idGameLocal::selected(idEntity* ent, idVec3& pos) {
 		idAI* unitAI = static_cast<idAI*>(selectedUnit);
 		gameLocal.Printf("Attempt move to Ent\n");
 
-		if (!(convoyTurns[selectedUnit->convoyPos][1])) { // already moved and or attacked
+		if (!(convoyTurns[selectedUnit->convoyPos][1])) { // already moved and or 
+			gameLocal.Printf("Already Moved\n");
 			return;
 		}
 
 		if (convoyTurns[selectedUnit->convoyPos][0]) { // can Move
+			gameLocal.Printf("Can move\n");
 			convoyActions[selectedUnit->convoyPos] = ent->entityNumber;
 			convoyTurns[selectedUnit->convoyPos][0] = false;
 			
 			unitAI->canMakeActionLaser = true;
 			for (int i = 0; i < 5; i++) {
 				if (convoy[i] == ent) {
-					acceptableRangeToTarget -= 142;
+					acceptableRangeToTarget -= 67;
 				}
 			}
 			
@@ -8934,7 +8951,7 @@ void idGameLocal::selected(idEntity* ent, idVec3& pos) {
 
 		idAI* unitAI = static_cast<idAI*>(selectedUnit);
 		unitAI->canMakeActionLaser = true;
-		acceptableRangeToTarget -= 142;
+		acceptableRangeToTarget -= 67;
 		movTimeOuts[selectedUnit->convoyPos] = time;
 		unitAI->MoveToEntity(pointerEntity, acceptableRangeToTarget);
 		// MoveToAttack( idEntity *ent, int attack_anim )
@@ -8945,60 +8962,57 @@ void idGameLocal::selected(idEntity* ent, idVec3& pos) {
 	}
 
 }
-void checkTimeOutAlt() {
-	if (!turn) {
-		gameLocal.Printf("-------\nCUR: %i|\nETime: %i\n-------");
-		if ((gameLocal.time - enemyTimeOut) > 7) {
-			forceEndTurn();
-		}
-	}
-	for (int i = 0; i < 5; i++) {
-		if (!attackTimeOuts[i]) continue;
-
-		idAI* unitAI = static_cast<idAI*>(convoy[i]);
-		if ((gameLocal.time - attackTimeOuts[i]) > 60000) {
-
-			attackTimeOuts[i] = 0;
-			unitTurnAttacks[i] = unitStats[i].tech;
-			convoyTurns[i][0] = false;
-			convoyTurns[i][1] = false;
-			unitAI->canMakeAttackLaser = false;
-		}
-		if ((gameLocal.time - movTimeOuts[i]) > 10000) {
-			gameLocal.Printf("-------\nCUR: %i|\nETime: %i\n-------");
-			gameLocal.endAction(unitAI, 1);
-		}
-	}
-	for (int i = 0; i < 5; i++) {
-		if (convoyTurns[i][0] && convoyTurns[i][1]) 
-			return;
-		
-	}
-	forceEndTurn();
-}
+//void checkTimeOutAlt() {
+//	
+//	if (!turn) {
+//		gameLocal.Printf("-------\nCUR: %i|\nETime: %i\n-------");
+//		if ((gameLocal.time - enemyTimeOut) > 7) {
+//			forceEndTurn();
+//		}
+//	}
+//	for (int i = 0; i < 5; i++) {
+//		if (!attackTimeOuts[i]) continue;
+//
+//		idAI* unitAI = static_cast<idAI*>(convoy[i]);
+//		if ((gameLocal.time - attackTimeOuts[i]) > 60000) {
+//
+//			attackTimeOuts[i] = 0;
+//			unitTurnAttacks[i] = unitStats[i].tech;
+//			convoyTurns[i][0] = false;
+//			convoyTurns[i][1] = false;
+//			unitAI->canMakeAttackLaser = false;
+//		}
+//		if ((gameLocal.time - movTimeOuts[i]) > 10000) {
+//			gameLocal.Printf("-------\nCUR: %i|\nETime: %i\n-------");
+//			gameLocal.endAction(unitAI, 1);
+//		}
+//	}
+//	for (int i = 0; i < 5; i++) {
+//		if (convoyTurns[i][0] && convoyTurns[i][1]) 
+//			return;
+//		
+//	}
+//	forceEndTurn();
+//}
 void idGameLocal::checkTimeOut() {
 	if (!turn) {
-		gameLocal.Printf("-------\nCUR: %i|\nETime: %i\n-------");
 		if ((time - enemyTimeOut) > 7000) {
 			forceEndTurn();
 		}
 	}
-	for (int i = 0; i < 5; i++) {
-		if (!attackTimeOuts[i]) continue;
+	//for (int i = 0; i < 5; i++) {
+	//	if (!attackTimeOuts[i]) continue;
 
-		idAI* unitAI = static_cast<idAI*>(convoy[i]);
-		if ((time - attackTimeOuts[i]) > 60000) {
-			
-			attackTimeOuts[i] = 0;
-			unitTurnAttacks[i] = unitStats[i].tech;
-			convoyTurns[i][0] = false;
-			convoyTurns[i][1] = false;
-			unitAI->canMakeAttackLaser = false;
-		}
-		if ((time - movTimeOuts[i]) > 10000) {
-			endAction(unitAI, 1);
-		}
-	}
+	//	idAI* unitAI = static_cast<idAI*>(convoy[i]);
+	//	if ((time - attackTimeOuts[i]) > 60000) {
+	//		
+	//		attackTimeOuts[i] = 0;
+	//		unitTurnAttacks[i] = unitStats[i].tech;
+	//		convoyTurns[i][0] = false;
+	//		convoyTurns[i][1] = false;
+	//		unitAI->canMakeAttackLaser = false;
+	//	}
+	//}
 }
 
 

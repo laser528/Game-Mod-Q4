@@ -863,9 +863,9 @@ Initialize a new movement by setting up the movement structure
 */
 bool idAI::StartMove ( aiMoveCommand_t command, const idVec3& goalOrigin, int goalArea, idEntity* goalEntity, aasFeature_t* feature, float range ) { // LASER HUGE STARTMOVE
 	// If we are already there then we are done
-	//if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
-	//	return true;
-	//}
+	if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
+		return true;
+	}
 
 	if ( ReachedPos( goalOrigin, command ) ) {
 		gameLocal.Printf("Reached Position\n");
@@ -904,9 +904,9 @@ void idAI::StopMove( moveStatus_t status ) {
 	aiMoveCommand_t oldCommand = move.moveCommand;
 	float saveZ = 0.0f;
 
-	if (this->canMakeActionLaser && unitTurn) { // Laser
-		return;
-	}
+	//if (this->canMakeActionLaser) { // Laser
+	//	return;
+	//}
 
 
 	move.fl.done			= true;
@@ -986,9 +986,7 @@ bool idAI::MoveToAttack ( idEntity *ent, int attack_anim ) { // Laser Maybe Intr
 	idVec3			pos;
 
 
-	if (unitTurn = 1) { // LASER stop spwaned movement
-		return false;
-	}
+
 
 	if ( !aas || !ent ) {
 		return false;
@@ -1060,7 +1058,7 @@ bool idAI::MoveToEnemy( void ) {
 	idVec3		pos;
 
 
-	if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
+	if (gameLocal.GetTurn() != unitTurn || !canMakeAttackLaser) { // LASER stop spwaned movement
 		return false;
 	}
 
@@ -1135,15 +1133,14 @@ bool idAI::MoveToEntity( idEntity *ent, float range ) {
 	if (unitTurn = 1) gameLocal.Printf("--------------------\n");
 	if (unitTurn = 1) gameLocal.Printf("Move to Entity start\n");
 	
-	if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
-		if (ReachedPos(pos, MOVE_TO_ENTITY, range)) {
-			if (unitTurn = 1) gameLocal.Printf("Reached Position\n");
-			StopMove(MOVE_STATUS_DONE);
-			return true;
-		}
-		return false;
-	}
+	//if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
 
+	//}
+	if (ReachedPos(pos, MOVE_TO_ENTITY, range)) {
+		if (unitTurn = 1) gameLocal.Printf("Reached Position\n");
+		StopMove(MOVE_STATUS_DONE);
+		return true;
+	}
 
 	if ( !ent ) {
 		return false;
@@ -1168,7 +1165,6 @@ bool idAI::MoveToEntity( idEntity *ent, float range ) {
 	// Early out if we are already there.
 	if ( ReachedPos( pos, MOVE_TO_ENTITY, range ) ) {
 		if (unitTurn = 1) gameLocal.Printf("Move to Entity Arrived\n");
-		StopMove( MOVE_STATUS_DONE );
 		gameLocal.endAction(this, 1);
 		return true;
 	}
@@ -1178,7 +1174,8 @@ bool idAI::MoveToEntity( idEntity *ent, float range ) {
 	if ( aas ) {
 		areaNum = PointReachableAreaNum( pos );
 		aas->PushPointIntoAreaNum( areaNum, pos );
-		if ( false ) { // Laser !PathToGoal( path, PointReachableAreaNum( physicsObj.GetOrigin() ), physicsObj.GetOrigin(), areaNum, pos )
+		if (false) { // Laser !PathToGoal( path, PointReachableAreaNum( physicsObj.GetOrigin() ), physicsObj.GetOrigin(), areaNum, pos )
+			//StopMove(MOVE_STATUS_DONE);
 			return false;
 		}
 	}
