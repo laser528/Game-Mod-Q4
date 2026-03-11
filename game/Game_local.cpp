@@ -8967,11 +8967,15 @@ static void attack(idEntity* target, idAI* unitAi) {
 
 				unitTurnAttacks[unitAi->convoyPos] = unitStats[unitAi->convoyPos].tech;
 				gameLocal.endAction(unitAi, 2);
+				updateStatsGui(target->convoyPos, OVER_HEALTH);
+				updateStatsGui(target->convoyPos, HEALTH);
 				return;
 			}
 			unitTurnAttacks[unitAi->convoyPos] = unitStats[unitAi->convoyPos].tech;
 			gameLocal.endAction(unitAi, 2);
 			target->health += totalHealing;
+			updateStatsGui(target->convoyPos, OVER_HEALTH);
+			updateStatsGui(target->convoyPos, HEALTH);
 			break;
 		case 4: // Technician / Dancer unit turn refresh
 			gameLocal.Printf("Techyyyy\n");
