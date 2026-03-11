@@ -8545,17 +8545,36 @@ void idGameLocal::resetUnits() {
 	turnCounter = 1;
 	for (int i = 0; i < 5; i++) {
 		convoy[i]->~idEntity();
+		convoy[i] = NULL;
+		convoyTurns[i][0] = 0;
+		convoyTurns[i][1] = 0;
+		convoyActions[i] = 0;
+
+		unitStats[i].overHealth = 0;
+	   
+		unitStats[i].mov = 1;           
+		unitStats[i].tech = 1;		   
+		 
+
+		unitStats[i].exp = 0;
+		unitStats[i].level = 0;             
+
+		unitStats[i].maxHealth = 0;     // Hidden stats
+		unitStats[i].baseHealth = 0;
+		unitStats[i].superClass = 0;
+		
+		unitGrowthRates[i].overHealth = 0.0;
+		unitGrowthRates[i].mov = 0.0;
+		unitGrowthRates[i].tech = 0.0;
+		unitGrowthRates[i].luck = 0.0;
+
+		unitTurnAttacks[i] = 0;
+		attackTimeOuts[i] = 0;
 	}
-	convoy[5] = {};
+	
 	selectedUnit = NULL;
 	pointerEntity = NULL; // marine head as anchor due to unrealiability of move to
-	convoyTurns[5][2];
-	convoyActions[5];
-	unitStats[5];
-	unitGrowthRates[5];
-	unitTurnAttacks[5];
-	attackTimeOuts[5];
-	movTimeOuts[5];
+
 	guiHelpMenu = 0;
 	enemyTimeOut = 0;
 
