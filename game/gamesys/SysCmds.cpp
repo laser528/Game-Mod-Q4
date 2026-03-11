@@ -3033,6 +3033,11 @@ void Cmd_PromoteUnit(const idCmdArgs& args) {
 		gameLocal.promoteCommand(atoi(args.Argv(i)));
 	}
 }
+void Cmd_LevelUpUnit(const idCmdArgs& args) {
+	for (int i = 1; i < args.Argc(); i++) {
+		gameLocal.levelUp(atoi(args.Argv(i)));
+	}
+}
 
 #ifndef _FINAL
 void Cmd_ClientOverflowReliable_f( const idCmdArgs& args ) {
@@ -3246,8 +3251,10 @@ void idGameLocal::InitConsoleCommands( void ) {
 // RITUAL END
 	// LASER KEYBINDS
 	cmdSystem->AddCommand("toggleHelpMenu",			Cmd_ToggleHelpMenu,			CMD_FL_GAME,				"Toggle Help menu");
-	cmdSystem->AddCommand("EndTurn",				Cmd_EndTurn,				CMD_FL_GAME,				"buy Item");
-	cmdSystem->AddCommand("PromoteUnits",			Cmd_PromoteUnit,				CMD_FL_GAME,				"buy Item");
+	cmdSystem->AddCommand("EndTurn",				Cmd_EndTurn,				CMD_FL_GAME,				"End Turn");
+	cmdSystem->AddCommand("PromoteUnits",			Cmd_PromoteUnit,			CMD_FL_GAME,				"Promote Unit");
+	cmdSystem->AddCommand("LevelUpUnits",			Cmd_LevelUpUnit,			CMD_FL_GAME,				"Level up unit");
+
 	
 }
 

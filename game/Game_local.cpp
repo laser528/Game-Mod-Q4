@@ -8600,7 +8600,7 @@ const char statGuiKeys[7][50] = {
 //};
 idVec3 spawns[5] = {
 	idVec3(9766.25, -7043.19, -13.72),
-	idVec3(10009.48, -7119.71, -28.15),
+	idVec3(9812.436523, -7013.122559, -5.711244),
 	idVec3(9152.09, -7042.23, 1.00),
 	idVec3(9455.38, -7054.11, 0.36),
 	idVec3(9477.90, -6892.88, 2.97)
@@ -8757,6 +8757,7 @@ void promote(int unit) {
 	idEntity* oldUnit = convoy[unit];
 
 	pos = oldUnit->GetPhysics()->GetOrigin();
+	pos.z += 8;
 
 	args.TokenizeString(unitCommands[unit+5], false);
 	convoy[unit] = Cmd_Spawn_f(args, pos);

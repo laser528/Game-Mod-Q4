@@ -1541,6 +1541,9 @@ bool idAI::NewWanderDir( const idVec3 &dest ) {
 	float	deltax, deltay;
 	float	d[ 3 ];
 	float	tdir, olddir, turnaround;
+	if (true) {
+		return true;
+	}
 
 	if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
 		return false;
@@ -2169,6 +2172,10 @@ void TestTeammateCollisions(idAI* owner) {
 	idVec3			myVelocity	= owner->GetPhysics()->GetLinearVelocity();
 	float			mySpeed		= myVelocity.NormalizeFast();
 
+
+	if (true) {
+		return;
+	}
 	// Don't Bother, We're Blocked Or Not Moving
 	//---------------------------------------------
 	if (owner->move.blockTime>gameLocal.GetTime() || !owner->move.fl.moving || mySpeed<1.0f) {
