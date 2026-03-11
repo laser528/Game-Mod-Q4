@@ -904,9 +904,9 @@ void idAI::StopMove( moveStatus_t status ) {
 	aiMoveCommand_t oldCommand = move.moveCommand;
 	float saveZ = 0.0f;
 
-	//if (this->canMakeActionLaser) { // Laser
-	//	return;
-	//}
+	if (this->canMakeActionLaser && unitTurn) { // Laser
+		return;
+	}
 
 
 	move.fl.done			= true;
@@ -986,8 +986,8 @@ bool idAI::MoveToAttack ( idEntity *ent, int attack_anim ) { // Laser Maybe Intr
 	idVec3			pos;
 
 
-	if (gameLocal.GetTurn() != unitTurn || !canMakeAttackLaser) { // LASER stop spwaned movement
-		return true;
+	if (unitTurn = 1) { // LASER stop spwaned movement
+		return false;
 	}
 
 	if ( !aas || !ent ) {
@@ -1132,10 +1132,12 @@ bool idAI::MoveToEntity( idEntity *ent, float range ) {
 	aasPath_t	path;
 	idVec3		pos;
 
+	if (unitTurn = 1) gameLocal.Printf("--------------------\n");
+	if (unitTurn = 1) gameLocal.Printf("Move to Entity start\n");
 	
 	if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
 		if (ReachedPos(pos, MOVE_TO_ENTITY, range)) {
-			gameLocal.Printf("6\n");
+			if (unitTurn = 1) gameLocal.Printf("Reached Position\n");
 			StopMove(MOVE_STATUS_DONE);
 			return true;
 		}
@@ -1153,6 +1155,7 @@ bool idAI::MoveToEntity( idEntity *ent, float range ) {
 
 	// If we are already moving to the entity and its position hasnt changed then we are done
 	if ( move.moveCommand == MOVE_TO_ENTITY && move.goalEntity == ent && move.goalEntityOrigin == pos ) {
+		if (unitTurn = 1) gameLocal.Printf("Move to Entity Move to Entity\n");
 		return true;
 	}
 	
@@ -1164,7 +1167,7 @@ bool idAI::MoveToEntity( idEntity *ent, float range ) {
 
 	// Early out if we are already there.
 	if ( ReachedPos( pos, MOVE_TO_ENTITY, range ) ) {
-		gameLocal.Printf("6\n");
+		if (unitTurn = 1) gameLocal.Printf("Move to Entity Arrived\n");
 		StopMove( MOVE_STATUS_DONE );
 		gameLocal.endAction(this, 1);
 		return true;

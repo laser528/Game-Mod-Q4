@@ -8542,18 +8542,25 @@ bool init = false;
 // gui::HelpMenu_Data
 // P_HelpMenu_Laser
 const char unitCommands[10][150] = {
-	"spawn char_kane_strogg         npc_name 'Mathew Kane' npc_description 'Class: Commander'   team 0",
-	"spawn char_marine_medic        npc_name 'John Snow'   npc_description 'Class: Medic'       team 0",
-	"spawn char_marine_shotgun	    npc_name 'John Snow'   npc_description 'Class: Shotgunner'  team 0",
-	"spawn char_marine              npc_name 'John Snow'   npc_description 'Class: Gunslinger'  team 0 def_head 'char_marinehead_helmet'",
-	"spawn char_marine_tech         npc_name 'John Snow'   npc_description 'Class: Technician'  team 0 def_head 'char_marinehead_helmet'",
+	"spawn char_kane_strogg         npc_name 'Mathew Kane'      npc_description 'Class: Commander'   team 0",
+	"spawn char_marine_medic        npc_name 'John Snow'        npc_description 'Class: Medic'       team 0",
+	"spawn char_marine_shotgun	    npc_name 'Jack Strife'      npc_description 'Class: Shotgunner'  team 0",
+	"spawn char_marine              npc_name 'John Marine'      npc_description 'Class: Gunslinger'  team 0 def_head 'char_marinehead_helmet'",
+	"spawn char_marine_tech         npc_name 'Tyrell Johnson'   npc_description 'Class: Technician'  team 0 def_head 'char_marinehead_helmet'",
 	// Advanced Classes
-	"spawn monster_gladiator        npc_name 'Mathew Kane' npc_description 'Class: Emperor'     team 0",
-	"spawn char_marine_medic_armed  npc_name 'John Snow'   npc_description 'Class: Surgeon'     team 0",
-	"spawn monster_gunner	        npc_name 'John Snow'   npc_description 'Class: War Chief'   team 0",
-	"spawn char_marine_hyperblaster npc_name 'John Snow'   npc_description 'Class: Reaper'      team 0 def_head 'char_marinehead_helmet'",
-	"spawn char_marine_tech_armed   npc_name 'John Snow'   npc_description 'Class: Tactician'   team 0 def_head 'char_marinehead_helmet'",
+	"spawn monster_gladiator        npc_name 'Mathew Kane'      npc_description 'Class: Emperor'     team 0",
+	"spawn char_marine_medic_armed  npc_name 'John Snow'        npc_description 'Class: Surgeon'     team 0",
+	"spawn monster_gunner	        npc_name 'Jack Strife'      npc_description 'Class: War Chief'   team 0",
+	"spawn char_marine_hyperblaster npc_name 'John Marine'      npc_description 'Class: Reaper'      team 0 def_head 'char_marinehead_helmet'",
+	"spawn char_marine_tech_armed   npc_name 'Tyrell Johnson'   npc_description 'Class: Tactician'   team 0 def_head 'char_marinehead_helmet'",
 
+};
+const char unitNames[5][50] = {
+	"Mathew Kane",
+	"John Snow",
+	"Jack Strife",
+	"John Marine",
+	"Tyrell Johnson"
 };
 const char statGuiPresets[7][50] = {
 	"OH:",
@@ -8596,6 +8603,19 @@ idVec3 spawns[5] = {
 const char pointerCommand[50] = "spawn char_marinehead_helmet_medic";
 
 
+void updateHelpMenu() {
+	// showHelpMenuLaser
+	// gui::HelpMenu_Data
+	// P_HelpMenu_Laser
+
+	//sprintf(guiData, helpMenuData, turnCounter);
+	char buffer[6];
+	sprintf(buffer, "%i/50", turnCounter);
+
+	gameLocal.GetLocalPlayer()->GetHud()->SetStateString("HelpMenu_Data", buffer);
+	gameLocal.GetLocalPlayer()->GetHud()->StateChanged(gameLocal.time);
+
+}
 
 void resetUnit(int i /*UNIT*/) {
 	convoyTurns[i][0] = 1;
@@ -8624,7 +8644,7 @@ void forceEndTurn() {
 			convoyTurns[i][0] = 0;
 		}
 		turn = 0;
-		gameLocal.Printf("Turn: 0");
+		gameLocal.Printf("Turn: 0\n");
 		enemyTimeOut = gameLocal.time;
 
 		return;
@@ -8632,7 +8652,9 @@ void forceEndTurn() {
 
 	for (int i = 0; i < 5; i++) resetUnit(i);
 	turn = 1;
-	gameLocal.Printf("Turn: 1");
+	turnCounter += 1;
+	updateHelpMenu();
+	gameLocal.Printf("Turn: 1\n");
 }
 
 void updateStatsGui(int unit, int stat) {
@@ -8693,19 +8715,6 @@ bool idGameLocal::CheckInit() {
 	return init;
 }
 
-void updateHelpMenu() {
-	// showHelpMenuLaser
-	// gui::HelpMenu_Data
-	// P_HelpMenu_Laser
-	
-	//sprintf(guiData, helpMenuData, turnCounter);
-	char buffer[6];
-	sprintf(buffer, "%i/50", turnCounter);
-	
-	gameLocal.GetLocalPlayer()->GetHud()->SetStateString("HelpMenu_Data", buffer);
-	gameLocal.GetLocalPlayer()->GetHud()->StateChanged(gameLocal.time);
-	
-}
 void idGameLocal::toggleHelpMenu() {
 	if (guiHelpMenu) gameLocal.GetLocalPlayer()->GetHud()->HandleNamedEvent("hideHelpMenuLaser");
 	else			 gameLocal.GetLocalPlayer()->GetHud()->HandleNamedEvent("showHelpMenuLaser");
@@ -8762,7 +8771,10 @@ void idGameLocal::SpawnConvoy() {
 	if (init) return;
 
 	for (int i = 0; i < 5; i++) { 
-		// spawn units
+		char buffer[50];
+
+		sprintf(buffer, "Name_unit_%i", i+1);
+
 		args.TokenizeString(unitCommands[i], false);
 		convoy[i] = Cmd_Spawn_f(args, spawns[i]);
 
@@ -8787,7 +8799,9 @@ void idGameLocal::SpawnConvoy() {
 		unitStats[i].baseHealth = unitAI->health;
 
 		unitStats[i].level = random.RandomInt(3) + 1; // 1-4 Lvl
+
 		updateAllStatsGui(i);
+		gameLocal.GetLocalPlayer()->GetHud()->SetStateString(buffer, unitNames[i]);
 		for (int i = 0; i < unitStats[i].level; i++) { // Level rewards
 			levelUp(i);
 		}
@@ -8815,18 +8829,26 @@ static void attack(idEntity* target, idAI* unitAi) {
 		switch (unitAi->convoyPos) {
 		case 1:
 			gameLocal.Printf("Heallyyyyy\n");
+
 			for (int i = 0; i < unitStats[unitAi->convoyPos].overHealth; i++) {
 				totalHealing += gameLocal.random.RandomInt(12) * (unitStats[unitAi->convoyPos].overHealth + 1);
 			}
 			if ((target->health + totalHealing) > unitStats[i].maxHealth) {
 				target->health = unitStats[i].maxHealth;
+
+				unitTurnAttacks[unitAi->convoyPos] = unitStats[unitAi->convoyPos].tech;
+				gameLocal.endAction(unitAi, 2);
 				return;
 			}
+			unitTurnAttacks[unitAi->convoyPos] = unitStats[unitAi->convoyPos].tech;
+			gameLocal.endAction(unitAi, 2);
 			target->health += totalHealing;
 			break;
 		case 4: // Technician / Dancer unit turn refresh
 			gameLocal.Printf("Techyyyy\n");
 			resetUnit(i);
+			unitTurnAttacks[unitAi->convoyPos] = unitStats[unitAi->convoyPos].tech;
+			gameLocal.endAction(unitAi, 2);
 			break;
 		}
 	}
@@ -8943,9 +8965,16 @@ void checkTimeOutAlt() {
 			unitAI->canMakeAttackLaser = false;
 		}
 		if ((gameLocal.time - movTimeOuts[i]) > 10000) {
+			gameLocal.Printf("-------\nCUR: %i|\nETime: %i\n-------");
 			gameLocal.endAction(unitAI, 1);
 		}
 	}
+	for (int i = 0; i < 5; i++) {
+		if (convoyTurns[i][0] && convoyTurns[i][1]) 
+			return;
+		
+	}
+	forceEndTurn();
 }
 void idGameLocal::checkTimeOut() {
 	if (!turn) {
@@ -8988,6 +9017,7 @@ void idGameLocal::endAction(const idAI* ai, int Action) {
 				gameLocal.Printf("Attempt to End move\n");
 				unitAI->canMakeActionLaser = false;
 				unitAI->StopMove(MOVE_STATUS_DEST_NOT_FOUND);
+				movTimeOuts[i] = 0;
 
 				if (convoyActions[ent->convoyPos] != -1) {
 					gameLocal.Printf("Attempt to Attack\n");
@@ -9002,6 +9032,7 @@ void idGameLocal::endAction(const idAI* ai, int Action) {
 					convoyTurns[i][0] = false;
 					convoyTurns[i][1] = false;
 					unitAI->canMakeAttackLaser = false;
+					attackTimeOuts[i] = 0;
 				}
 				if ((unitStats[i].exp += (random.RandomInt(25)+1)) >= 100) {
 					int carry = unitStats[i].exp - 100;
@@ -9010,9 +9041,7 @@ void idGameLocal::endAction(const idAI* ai, int Action) {
 
 				}
 				unitTurnAttacks[i] += 1;
-				break;
-			case 3:
-				
+				attackTimeOuts[i] = time;
 				break;
 			default:
 				
