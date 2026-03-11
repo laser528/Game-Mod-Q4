@@ -8617,6 +8617,7 @@ idVec3 spawns[5] = {
 const char pointerCommand[50] = "spawn char_marinehead_helmet_medic";
 
 
+
 void updateHelpMenu() {
 	// showHelpMenuLaser
 	// gui::HelpMenu_Data
@@ -8985,22 +8986,25 @@ void idGameLocal::selected(idEntity* ent, idVec3& pos) {
 
 	} else if(selectedUnit != NULL && !ent->IsType(idAI::GetClassType())) { // Move Unit to pos
 		idCmdArgs args;
-
+		idVec3 zShiftPos(pos.x,pos.y,pos.z);
 		if (!(convoyTurns[selectedUnit->convoyPos][0])) {
 			return;
 		}
 		convoyTurns[selectedUnit->convoyPos][0] = false;
 		convoyTurns[selectedUnit->convoyPos][1] = false;
 
-
+		
 		args.TokenizeString(pointerCommand, false);
-		pointerEntity = Cmd_Spawn_f(args, pos);
+		pointerEntity = Cmd_Spawn_f(args, zShiftPos);
 
 		idAI* unitAI = static_cast<idAI*>(selectedUnit);
 		unitAI->canMakeActionLaser = true;
-		acceptableRangeToTarget -= 67;
+		acceptableRangeToTarget = 56;
 		movTimeOuts[selectedUnit->convoyPos] = time;
+		selectedUnit = NULL;
+
 		unitAI->MoveToEntity(pointerEntity, acceptableRangeToTarget);
+		
 		// MoveToAttack( idEntity *ent, int attack_anim )
 		// MoveToEntity( idEntity *ent, float range )
 		// MoveTo ( const idVec3 &pos, float range )

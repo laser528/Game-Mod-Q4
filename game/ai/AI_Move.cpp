@@ -863,8 +863,10 @@ Initialize a new movement by setting up the movement structure
 */
 bool idAI::StartMove ( aiMoveCommand_t command, const idVec3& goalOrigin, int goalArea, idEntity* goalEntity, aasFeature_t* feature, float range ) { // LASER HUGE STARTMOVE
 	// If we are already there then we are done
+	gameLocal.Printf("Start MOVE\n");
 	if (gameLocal.GetTurn() != unitTurn || !canMakeActionLaser) { // LASER stop spwaned movement
-		return true;
+		gameLocal.Printf("Turn Change so stop move\n");
+		return false;
 	}
 
 	if ( ReachedPos( goalOrigin, command ) ) {
@@ -904,9 +906,9 @@ void idAI::StopMove( moveStatus_t status ) {
 	aiMoveCommand_t oldCommand = move.moveCommand;
 	float saveZ = 0.0f;
 
-	//if (this->canMakeActionLaser) { // Laser
-	//	return;
-	//}
+	if (this->canMakeActionLaser && unitTurn == 1) { // Laser
+		return;
+	}
 
 
 	move.fl.done			= true;
@@ -1153,7 +1155,7 @@ bool idAI::MoveToEntity( idEntity *ent, float range ) {
 	// If we are already moving to the entity and its position hasnt changed then we are done
 	if ( move.moveCommand == MOVE_TO_ENTITY && move.goalEntity == ent && move.goalEntityOrigin == pos ) {
 		if (unitTurn = 1) gameLocal.Printf("Move to Entity Move to Entity\n");
-		return true;
+		/*return false;*/
 	}
 	
 
@@ -1174,8 +1176,10 @@ bool idAI::MoveToEntity( idEntity *ent, float range ) {
 	if ( aas ) {
 		areaNum = PointReachableAreaNum( pos );
 		aas->PushPointIntoAreaNum( areaNum, pos );
-		if (false) { // Laser !PathToGoal( path, PointReachableAreaNum( physicsObj.GetOrigin() ), physicsObj.GetOrigin(), areaNum, pos )
+		if (!PathToGoal(path, PointReachableAreaNum(physicsObj.GetOrigin()), physicsObj.GetOrigin(), areaNum, pos)) { // Laser !PathToGoal( path, PointReachableAreaNum( physicsObj.GetOrigin() ), physicsObj.GetOrigin(), areaNum, pos )
 			//StopMove(MOVE_STATUS_DONE);
+			gameLocal.Printf("Cant find your way\n");
+			gameLocal.endAction(this, 1);
 			return false;
 		}
 	}
